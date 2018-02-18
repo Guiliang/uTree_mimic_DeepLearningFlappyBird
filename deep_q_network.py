@@ -4,6 +4,8 @@ from __future__ import print_function
 import tensorflow as tf
 import cv2
 import sys
+import pickle
+import os
 
 sys.path.append("game/")
 import wrapped_flappy_bird as game
@@ -82,6 +84,84 @@ def createNetwork():
     return s, readout, h_fc1
 
 
+def testNetwork(s, readout, h_fc1, sess):
+    # define the cost function
+    a = tf.placeholder("float", [None, ACTIONS])
+    # y = tf.placeholder("float", [None])
+    readout_action = tf.reduce_sum(tf.multiply(readout, a), reduction_indices=1)
+    # cost = tf.reduce_mean(tf.square(y - readout_action))
+    # train_step = tf.train.AdamOptimizer(1e-6).minimize(cost)
+
+    # open up a game state to communicate with emulator
+    game_state = game.GameState()
+
+    # store the previous observations in replay memory
+    D = deque()
+
+    # get the first state by doing nothing and preprocess the image to 80x80x4
+    do_nothing = np.zeros(ACTIONS)
+    do_nothing[0] = 1
+    x_t, r_0, terminal = game_state.frame_step(do_nothing)
+    x_t = cv2.cvtColor(cv2.resize(x_t, (80, 80)), cv2.COLOR_BGR2GRAY)
+    ret, x_t = cv2.threshold(x_t, 1, 255, cv2.THRESH_BINARY)
+    s_t = np.stack((x_t, x_t, x_t, x_t), axis=2)
+
+    # saving and loading networks
+    saver = tf.train.Saver()
+    sess.run(tf.initialize_all_variables())
+    checkpoint = tf.train.get_checkpoint_state("saved_networks")
+    if checkpoint and checkpoint.model_checkpoint_path:
+        saver.restore(sess, checkpoint.model_checkpoint_path)
+        print("Successfully loaded:", checkpoint.model_checkpoint_path)
+    else:
+        print("Could not find old network weights")
+
+    # start training
+    epsilon = INITIAL_EPSILON
+    t = 0
+    while "flappy bird" != "angry bird":
+        # choose an action epsilon greedily
+        readout_t = readout.eval(feed_dict={s: [s_t]})[0]
+        a_t = np.zeros([ACTIONS])
+        action_index = 0
+        if t % FRAME_PER_ACTION == 0:
+            if random.random() <= epsilon:
+                print("----------Random Action----------")
+                action_index = random.randrange(ACTIONS)
+                a_t[random.randrange(ACTIONS)] = 1
+            else:
+                action_index = np.argmax(readout_t)
+                a_t[action_index] = 1
+        else:
+            a_t[0] = 1  # do nothing
+
+        # scale down epsilon
+        if epsilon > FINAL_EPSILON and t > OBSERVE:
+            epsilon -= (INITIAL_EPSILON - FINAL_EPSILON) / EXPLORE
+
+        # run the selected action and observe next state and reward
+        x_t1_colored, r_t, terminal = game_state.frame_step(a_t)
+        x_t1 = cv2.cvtColor(cv2.resize(x_t1_colored, (80, 80)), cv2.COLOR_BGR2GRAY)
+        ret, x_t1 = cv2.threshold(x_t1, 1, 255, cv2.THRESH_BINARY)
+        x_t1 = np.reshape(x_t1, (80, 80, 1))
+        s_t1 = np.append(x_t1, s_t[:, :, :3], axis=2)
+
+        # store the transition in D
+        transition = (s_t, a_t, r_t, s_t1, terminal)
+        grab_transitions(transition, t)
+
+        # update the old values
+        s_t = s_t1
+        t += 1
+
+        # print info
+        state = "test"
+
+        print("TIMESTEP", t, "/ STATE", state, \
+              "/ EPSILON", epsilon, "/ ACTION", action_index, "/ REWARD", r_t, \
+              "/ Q_MAX %e" % np.max(readout_t))
+
+
 def trainNetwork(s, readout, h_fc1, sess):
     # define the cost function
     a = tf.placeholder("float", [None, ACTIONS])
@@ -149,7 +229,8 @@ def trainNetwork(s, readout, h_fc1, sess):
         s_t1 = np.append(x_t1, s_t[:, :, :3], axis=2)
 
         # store the transition in D
-        D.append((s_t, a_t, r_t, s_t1, terminal))
+        transition = (s_t, a_t, r_t, s_t1, terminal)
+        D.append(transition)
         if len(D) > REPLAY_MEMORY:
             D.popleft()
 
@@ -193,7 +274,7 @@ def trainNetwork(s, readout, h_fc1, sess):
         state = ""
         if t <= OBSERVE:
             state = "observe"
-        elif t > OBSERVE and t <= OBSERVE + EXPLORE:
+        elif OBSERVE < t <= OBSERVE + EXPLORE:
             state = "explore"
         else:
             state = "train"
@@ -210,10 +291,16 @@ def trainNetwork(s, readout, h_fc1, sess):
         '''
 
 
+def grab_transitions(transition, number):
+    save_dir = './save_all_transitions/transition_num{0}.p'.format(number)
+    # os.mkdir(save_dir)
+    pickle.dump(transition, open(save_dir, 'wb'))
+
+
 def playGame():
     sess = tf.InteractiveSession()
     s, readout, h_fc1 = createNetwork()
-    trainNetwork(s, readout, h_fc1, sess)
+    testNetwork(s, readout, h_fc1, sess)
 
 
 def main():
