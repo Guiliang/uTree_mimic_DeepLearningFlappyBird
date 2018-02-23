@@ -8,7 +8,7 @@ import pickle
 import os
 
 sys.path.append("game/")
-import wrapped_flappy_bird as game
+import game.wrapped_flappy_bird as game
 import random
 import numpy as np
 from collections import deque
@@ -147,7 +147,7 @@ def testNetwork(s, readout, h_fc1, sess):
         s_t1 = np.append(x_t1, s_t[:, :, :3], axis=2)
 
         # store the transition in D
-        transition = (s_t, a_t, r_t, s_t1, terminal)
+        transition = (s_t[:, :, 0], a_t) # (s_t, a_t, r_t, s_t1, terminal)
         grab_transitions(transition, t)
 
         # update the old values
