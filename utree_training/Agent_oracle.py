@@ -16,8 +16,8 @@ def read_actions(game_directory, game_dir):
 
 
 def read_states(game_directory, game_dir):
-  temp = pickle.load(open(game_directory + game_dir, mode='rb'))
-  return temp[0], temp[1]
+  temp = pickle.load(open(game_directory + game_dir + '/game.p', mode='rb'))
+  return temp
 
 
 def read_rewards(game_directory, game_dir):
@@ -53,7 +53,7 @@ class CUTreeAgent:
     self.valiter = 1
     self.problem = problem
   
-  def update(self, currentObs, nextObs, qValue, value_iter=0, check_fringe=0,
+  def update(self, currentObs, nextObs, qValue, action, value_iter=0, check_fringe=0,
              home_identifier=None, beginflag=False):
     """
     update the tree
@@ -66,7 +66,7 @@ class CUTreeAgent:
     :return:
     """
     t = self.utree.getTime()  # return the length of history
-    i = C_UTree.Instance(t, currentObs, None, nextObs, None, home_identifier, qValue)
+    i = C_UTree.Instance(t, currentObs, action, nextObs, None, home_identifier, qValue)
     
     self.utree.updateCurrentNode(i, beginflag)
     
@@ -116,23 +116,21 @@ class CUTreeAgent:
     
     count = 0
     
-    checkpoint = 1000
+    checkpoint = 73
     if checkpoint > 0:
       self.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(checkpoint) + ".csv")
     
-    beginflag = True
-    
     for game_dir in game_dir_all:
       
-      states, qValue = read_states(game_directory, game_dir)
+      game = read_states(game_directory, game_dir)
       # actions = read_actions(game_directory, game_dir)
       # rewards = (read_rewards(game_directory, game_dir))[0]
       # training_information = read_train_info(game_directory, game_dir)
       # qValues = read_qValue(game_directory, game_dir)
       # assert states.shape[0] == actions.shape[0] and actions.shape[0] == rewards.shape[0]
       
-      event_number = 1
-      # beginflag = True
+      event_number = len(game)
+      beginflag = True
       count += 1
       
       for index in range(0, event_number):
@@ -148,14 +146,14 @@ class CUTreeAgent:
         
         # Episodic means we are training, not episodic means we are extracting Q-values
         if self.problem.isEpisodic:
+          game_info = game[index]
+          states = game_info[0]
+          action = game_info[1]
+          qValue = game_info[1]
           currentObs = np.reshape(states, 6400)[:self.problem.nStates]
           nextObs = currentObs
-          # nextObs = states[(index + 1) % event_number]
-          # reward = rewards[index]
-          # qValue = qValues[index]
-          # nextreward = rewards[(index + 1) % event_number]
-          
-          if count == len(game_dir_all):
+
+          if index == event_number - 1:
             nextObs = np.array([-1 for i in range(len(currentObs))])  # one game end
           # elif action == 5:
           #   # reward = 1
@@ -163,11 +161,11 @@ class CUTreeAgent:
           
           # This should only apply once to ensure no duplicate instances
           if count <= checkpoint:
-            self.update(currentObs, nextObs, qValue, beginflag=beginflag)
-          elif count % self.cff == 0:  # check fringe, check fringe after cff iterations
-            self.update(currentObs, nextObs, qValue, value_iter=1, check_fringe=1, beginflag=beginflag)
+            self.update(currentObs, nextObs, action, qValue, beginflag=beginflag)
+          elif index % self.cff == 0:  # check fringe, check fringe after cff iterations
+            self.update(currentObs, nextObs, action, qValue, value_iter=1, check_fringe=1, beginflag=beginflag)
           else:
-            self.update(currentObs, nextObs, qValue, beginflag=beginflag)
+            self.update(currentObs, nextObs, action, qValue, beginflag=beginflag)
           
           # reset begin flag
           # if action == 5:
@@ -181,8 +179,10 @@ class CUTreeAgent:
           # self.getQ(currentObs, [], action, reward, home_identifier)
       
       if self.problem.isEpisodic:
-        if checkpoint < count and count % self.cff == 0:
+        if checkpoint < count:
           self.utree.print_tree()
+          # pickle.dump(self.utree, open(TREE_PATH + "Game_File_" + str(count) + '.p', 'wb'))
+          # exit(0)
           self.utree.tocsvFile(TREE_PATH + "Game_File_" + str(count) + ".csv")
           # self.utree.tocsvFile(HOME_PATH + "Game_File_" + str(count) + ".csv")
         # print out tree info

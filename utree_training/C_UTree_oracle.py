@@ -43,6 +43,22 @@ class CUTree:
     self.nodes[self.term.idx] = self.term  # term_id:term_node
     self.nodes[self.start.idx] = self.start
   
+  def getBestAction(self, currentObs):
+    t = self.getTime()
+    i = Instance(t, currentObs, None, currentObs, None, None, np.zeros(2))
+    self.insertInstance(i)
+    next_state = self.getInstanceLeaf(i)
+    bestInst = None
+    maxCorr = 1000000
+    # currentObs = np.transpose(currentObs)
+    for inst in next_state.instances:
+      sub = np.subtract(currentObs, inst.currentObs)
+      diff = np.var(sub)
+      if maxCorr > diff and inst.action is not None:
+        maxCorr = diff
+        bestInst = inst
+    return bestInst.action
+  
   def tocsvFile(self, filename):
     '''
     Store a record of U-Tree in file, make it easier to rebuild tree
@@ -321,7 +337,7 @@ class CUTree:
     # assert node.nodeType == NodeLeaf
     node.count = 0  # re-initialize count
     # node.transitions = {}  # re-initialize transition
-
+    
     for inst in node.instances:
       # leaf_to = self.getInstanceLeaf(inst, previous=1)  # get the to node
       # # update the node, add action reward, action count and transition states
@@ -439,8 +455,8 @@ class CUTree:
     for i, n in self.nodes.items():
       if n.nodeType == NodeLeaf:
         self.modelFromInstances(n)
-
-    node.instances=[]
+    
+    node.instances = []
     # update Q-values for children
     # for n in node.children:
     #   self.sweepRecursive(n, self.gamma)
@@ -668,7 +684,7 @@ class CUTree:
         next_state_util = next_state.utility(index == HOME)  # maximum Q value
         efdrs[i] += self.gamma * next_state_util  # r + gamma * maxQ
     return efdrs
-
+  
   # def getEFDRs(self, node, index):
   #   """
   #   Get all expected future discounted returns for all instances in a node
@@ -692,8 +708,8 @@ class CUTree:
   #           efdrs[i] = -inst.reward + self.gamma * next_away_state_util  # r + gamma * maxQ
   #
   #   return efdrs
-
-  def ksTestonQ(self, node, cds, diff_significanceLevel=float(0.01)):
+  
+  def ksTestonQ(self, node, cds, diff_significanceLevel=float(0.0001)):
     """
     KS test is performed here
     1. find all the possible distinction
@@ -711,33 +727,40 @@ class CUTree:
     cd_split = None
     for cd in cds:
       self.splitToFringe(node, cd)
+      stop = 0
       child_qs = []
       for c in node.children:
+        if len(c.instances) < self.minSplitInstances:
+          stop = 1
+          break
         child_qs.append(self.getQs(c))
-
+        
       self.unsplit(node)
+      if stop == 1:
+        continue
+        
       for i, cq in enumerate(child_qs):
-
+        
         if len(cq[0]) == 0 or len(cq[1]) == 0:
           continue
         else:
           variance_child_home = np.var(cq[0])
           variance_child_away = np.var(cq[1])
-
+          
           diff_home = abs(variance_home - variance_child_home)
           diff_away = abs(variance_away - variance_child_away)
           diff = diff_home if diff_home > diff_away else diff_away
           if diff > diff_significanceLevel and diff > diff_max:
             diff_max = diff
             cd_split = cd
-            print ('vanriance test passed, diff=', diff, ',d=', cd.dimension)
-
+            print('vanriance test passed, diff=', diff, ',d=', cd.dimension)
+    
     if cd_split:
-      print ('Will be split, p=', diff_max, ',d=', cd_split.dimension_name)
+      print('Will be split, p=', diff_max, ',d=', cd_split.dimension_name)
       return cd_split
     else:
       return cd_split
-
+  
   # def varDiff(self, listA=[], listB=[], diff=0):
   #   if len(listA) == 0 or len(listB) == 0:
   #     return diff - 1
@@ -752,7 +775,7 @@ class CUTree:
   #     var_b += (number_b - mean_b) ** 2
   #
   #   return abs(var_a / len(listA) - var_b / len(listB))
-
+  
   def getQs(self, node):
     """
     Get all expected future discounted returns for all instances in a node
@@ -763,9 +786,9 @@ class CUTree:
     for i, inst in enumerate(node.instances):
       efdrs_home[i] = inst.qValue[0]
       efdrs_away[i] = inst.qValue[1]
-
+    
     return [efdrs_home, efdrs_away]
-
+  
   def getCandidateDistinctions(self, node, select_interval=100):
     """
     construct all candidate distinctions
@@ -781,7 +804,7 @@ class CUTree:
     
     candidates = []
     for i in range(self.max_back_depth):
-      for j in range(0, self.n_dim): # no action here
+      for j in range(0, self.n_dim):  # no action here
         if j > -1 and self.dim_sizes[j] == 'continuous':
           # value=sum([inst.currentObs[j] for inst in node.instances])/len(node.instances)
           # d = Distinction(dimension=j, back_idx=i, dimension_name=self.dim_names[j],
@@ -866,11 +889,11 @@ class UNode:
     :return:
     """
     self.qValues_home = (self.count * self.qValues_home + qValue[0]) \
-                                / (self.count + 1)
+                        / (self.count + 1)
     self.qValues_away = (self.count * self.qValues_away + qValue[1]) \
-                                / (self.count + 1)
+                        / (self.count + 1)
     self.count += 1
-
+    
     # if new_state not in self.transitions:
     #   self.transitions[new_state] = 1
     # else:
@@ -905,7 +928,7 @@ class UNode:
         else:
           return 1
       else:
-        return int(inst.currentObs[self.distinction.dimension]!=0)
+        return int(inst.currentObs[self.distinction.dimension] != 0)
     else:
       if self.distinction.iscontinuous:
         if inst.nextObs[self.distinction.dimension] <= self.distinction.continuous_divide_value:
@@ -923,7 +946,7 @@ class Instance:
   
   def __init__(self, timestep, currentObs, action, nextObs, reward, home_identifier, qValue):
     self.timestep = int(timestep)
-    # self.action = int(action)
+    self.action = action
     self.nextObs = nextObs  # record the state data
     self.currentObs = currentObs  # record the state data
     # self.reward = reward  # reserve for getEFDR only

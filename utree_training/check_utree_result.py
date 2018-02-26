@@ -4,6 +4,7 @@ import sys
 from utree_training import Problem_flappyBird, Agent_oracle as Agent
 import game.wrapped_flappy_bird as game
 import numpy as np
+import pickle
 
 from utree_training.test import opts
 
@@ -28,11 +29,12 @@ def playGame(agent):
   while "flappy bird" != "angry bird":
     # choose an action epsilon greedily
     currentObs = np.reshape(s_t[:, :, 0], 6400)[:agent.problem.nStates]
-    a_t = agent.getQ(currentObs)
-    if (a_t[0] > a_t[1]):
-      a_t = [1, 0]
-    else:
-      a_t = [0, 1]
+    a_t = agent.utree.getBestAction(currentObs)
+    # a_t = agent.getQ(currentObs)
+    # if (a_t[0] > a_t[1]):
+    #   a_t = [1, 0]
+    # else:
+    #   a_t = [0, 1]
     
     # run the selected action and observe next state and reward
     x_t1_colored, r_t, terminal = game_state.frame_step(a_t)
@@ -53,5 +55,6 @@ if __name__ == "__main__":
   ice_hockey_problem = Problem_flappyBird.flappyBird(games_directory=opts.GAME_DIRECTORY)
   CUTreeAgent = Agent.CUTreeAgent(problem=ice_hockey_problem, max_hist=opts.MAX_NODE_HIST,
                                   check_fringe_freq=opts.CHECK_FRINGE_FREQ, is_episodic=0)
-  CUTreeAgent.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(sys.argv[1]) + ".csv")
+  # CUTreeAgent.utree.fromcsvFile(TREE_PATH + "Game_File_" + sys.argv[1] + ".csv")
+  CUTreeAgent.utree = pickle.load(open(TREE_PATH + "Game_File_" + sys.argv[1] + '.p', mode='rb'))
   playGame(CUTreeAgent)
