@@ -53,7 +53,7 @@ class CUTreeAgent:
     self.valiter = 1
     self.problem = problem
   
-  def update(self, currentObs, nextObs, qValue, action, value_iter=0, check_fringe=0,
+  def update(self, currentObs, nextObs, action, qValue, value_iter=0, check_fringe=0,
              home_identifier=None, beginflag=False):
     """
     update the tree
@@ -86,7 +86,7 @@ class CUTreeAgent:
     :return:
     """
     t = self.utree.getTime()
-    i = C_UTree.Instance(t, currentObs, None, currentObs, None, None, np.zeros(2))
+    i = C_UTree.Instance(t, currentObs, None, currentObs, None, None, None)
     q_h, q_a = self.utree.getInstanceQvalues(i, None)
     return [q_h, q_a]
 
@@ -116,7 +116,7 @@ class CUTreeAgent:
     
     count = 0
     
-    checkpoint = 73
+    checkpoint = 0
     if checkpoint > 0:
       self.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(checkpoint) + ".csv")
     
@@ -148,8 +148,8 @@ class CUTreeAgent:
         if self.problem.isEpisodic:
           game_info = game[index]
           states = game_info[0]
-          action = game_info[1]
-          qValue = game_info[1]
+          action = (int)(game_info[1][1]==1)
+          qValue = game_info[2]
           currentObs = np.reshape(states, 6400)[:self.problem.nStates]
           nextObs = currentObs
 
@@ -179,7 +179,7 @@ class CUTreeAgent:
           # self.getQ(currentObs, [], action, reward, home_identifier)
       
       if self.problem.isEpisodic:
-        if checkpoint < count:
+        if checkpoint <= count:
           self.utree.print_tree()
           # pickle.dump(self.utree, open(TREE_PATH + "Game_File_" + str(count) + '.p', 'wb'))
           # exit(0)

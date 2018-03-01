@@ -11,7 +11,8 @@ class flappyBird:
     assert games_directory is not None
     self.games_directory = games_directory
     
-    self.actions = {}
+    self.actions = {'act0': 0,
+                    'act1': 1}
     # self.actions = {'block': 0,
     #                 'carry': 1,
     #                 'check': 2,

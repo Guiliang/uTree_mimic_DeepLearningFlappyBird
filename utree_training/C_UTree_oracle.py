@@ -43,22 +43,47 @@ class CUTree:
     self.nodes[self.term.idx] = self.term  # term_id:term_node
     self.nodes[self.start.idx] = self.start
   
+  # def getBestAction(self, currentObs):
+  #   t = self.getTime()
+  #   i = Instance(t, currentObs, None, currentObs, None, None, np.zeros(2))
+  #   self.insertInstance(i)
+  #   next_state = self.getInstanceLeaf(i)
+  #   bestInst = None
+  #   maxCorr = 1000000
+  #   # currentObs = np.transpose(currentObs)
+  #   for inst in next_state.instances:
+  #     sub = np.subtract(currentObs, inst.currentObs)
+  #     diff = np.var(sub)
+  #     if maxCorr > diff and inst.action is not None:
+  #       maxCorr = diff
+  #       bestInst = inst
+  #   self.popInstance()
+  #   return bestInst.action
+  
   def getBestAction(self, currentObs):
+    maxCorr = 1000000
     t = self.getTime()
-    i = Instance(t, currentObs, None, currentObs, None, None, np.zeros(2))
+    # action 0
+    i = Instance(t, currentObs, 0, currentObs, None, None, None)
     self.insertInstance(i)
     next_state = self.getInstanceLeaf(i)
-    bestInst = None
-    maxCorr = 1000000
-    # currentObs = np.transpose(currentObs)
     for inst in next_state.instances:
       sub = np.subtract(currentObs, inst.currentObs)
       diff = np.var(sub)
-      if maxCorr > diff and inst.action is not None:
+      if maxCorr > diff and inst.qValue is not None:
         maxCorr = diff
-        bestInst = inst
-    return bestInst.action
-  
+    self.popInstance()
+    # action 1
+    i = Instance(t, currentObs, 1, currentObs, None, None, None)
+    self.insertInstance(i)
+    next_state = self.getInstanceLeaf(i)
+    for inst in next_state.instances:
+      sub = np.subtract(currentObs, inst.currentObs)
+      diff = np.var(sub)
+      if maxCorr > diff and inst.qValue is not None:
+        return [0, 1]
+    return [1, 0]
+    
   def tocsvFile(self, filename):
     '''
     Store a record of U-Tree in file, make it easier to rebuild tree
@@ -66,7 +91,7 @@ class CUTree:
     :return:
     '''
     with open(filename, 'w', newline='') as csvfile:
-      fieldname = ['idx', 'dis', 'dis_value', 'par', 'q_home', 'q_away']
+      fieldname = ['idx', 'dis', 'dis_value', 'par', 'q']
       writer = csv.writer(csvfile)
       writer.writerow(fieldname)
       for i, node in self.nodes.items():
@@ -82,8 +107,9 @@ class CUTree:
                            None,
                            None,
                            node.parent.idx if node.parent else None,
-                           node.qValues_home,
-                           node.qValues_away])
+                           node.qValues])
+                           # node.qValues_home,
+                           # node.qValues_away])
   
   def tocsvFileComplete(self, filename):
     '''
@@ -110,8 +136,8 @@ class CUTree:
                            None,
                            None,
                            node.parent.idx if node.parent else None,
-                           node.qValues_home,
-                           node.qValues_away,
+                           # node.qValues_home,
+                           # node.qValues_away,
                            [inst.timestep for inst in node.instances]])
   
   def fromcsvFile(self, filename):
@@ -121,7 +147,7 @@ class CUTree:
     :return:
     '''
     with open(filename, 'r') as csvfile:
-      fieldname = ['idx', 'dis', 'dis_value', 'par', 'q_home', 'q_away']
+      fieldname = ['idx', 'dis', 'dis_value', 'par', 'q']
       reader = csv.reader(csvfile)
       self.node_id_count = 0
       for record in reader:
@@ -141,8 +167,9 @@ class CUTree:
         else:
           node = UNode(int(record[0]), NodeLeaf, self.nodes[int(record[3])] if record[3] else None,
                        self.n_actions, self.nodes[int(record[3])].depth + 1 if record[3] else 1)
-          node.qValues_home = float(record[4])
-          node.qValues_away = float(record[5])
+          node.qValues = float(record[4])
+          # node.qValues_home = float(record[4])
+          # node.qValues_away = float(record[5])
         if node.parent:
           self.nodes[int(record[3])].children.append(node)
         if node.idx == 1:
@@ -172,14 +199,15 @@ class CUTree:
       for child in node.children:
         self.print_tree_recursive(blank + " ", child)
     else:
-      print(blank + "idx={}, q_h={}, q_a={}, par={}".
+      print(blank + "idx={}, q={}, par={}".
             format(node.idx,
                    # node.transitions_home_home,
                    # node.transitions_home_away,
                    # node.transitions_away_home,
                    # node.transitions_away_away,
-                   node.qValues_home,
-                   node.qValues_away,
+                   node.qValues,
+                   # node.qValues_home,
+                   # node.qValues_away,
                    node.parent.idx if node.parent else None))
   
   def getInstanceQvalues(self, instance, reward):
@@ -275,6 +303,9 @@ class CUTree:
     # if len(self.history)>self.max_hist:
     #    self.history = self.history[1:]
   
+  def popInstance(self):
+    self.history.pop(len(self.history)-1)
+    
   def nextInstance(self, instance):
     """
     get the next instance
@@ -709,7 +740,7 @@ class CUTree:
   #
   #   return efdrs
   
-  def ksTestonQ(self, node, cds, diff_significanceLevel=float(0.0001)):
+  def ksTestonQ(self, node, cds, diff_significanceLevel=float(0.01)):
     """
     KS test is performed here
     1. find all the possible distinction
@@ -720,9 +751,11 @@ class CUTree:
     :return:
     """
     assert node.nodeType == NodeLeaf
-    root_utils_home, root_utils_away = self.getQs(node)
-    variance_home = np.var(root_utils_home)
-    variance_away = np.var(root_utils_away)
+    root_utils = self.getQs(node)
+    variance = np.var(root_utils)
+    # root_utils_home, root_utils_away = self.getQs(node)
+    # variance_home = np.var(root_utils_home)
+    # variance_away = np.var(root_utils_away)
     diff_max = float(0)
     cd_split = None
     for cd in cds:
@@ -741,20 +774,26 @@ class CUTree:
         
       for i, cq in enumerate(child_qs):
         
-        if len(cq[0]) == 0 or len(cq[1]) == 0:
+        if (len(cq) == 0):
+        # if len(cq[0]) == 0 or len(cq[1]) == 0:
           continue
         else:
-          variance_child_home = np.var(cq[0])
-          variance_child_away = np.var(cq[1])
+          variance_child = np.var(cq)
+          # variance_child_home = np.var(cq[0])
           
-          diff_home = abs(variance_home - variance_child_home)
-          diff_away = abs(variance_away - variance_child_away)
-          diff = diff_home if diff_home > diff_away else diff_away
+          diff = abs(variance - variance_child)
+          # diff_home = abs(variance_home - variance_child_home)
+          # diff_away = abs(variance_away - variance_child_away)
+          # diff = diff_home if diff_home > diff_away else diff_away
           if diff > diff_significanceLevel and diff > diff_max:
             diff_max = diff
             cd_split = cd
             print('vanriance test passed, diff=', diff, ',d=', cd.dimension)
     
+      # hand split action
+      if cd.dimension == ActionDimension and cd_split is not None:
+        break
+        
     if cd_split:
       print('Will be split, p=', diff_max, ',d=', cd_split.dimension_name)
       return cd_split
@@ -781,13 +820,16 @@ class CUTree:
     Get all expected future discounted returns for all instances in a node
     (q-value is just the average EFDRs)
     """
-    efdrs_home = np.zeros(len(node.instances))
-    efdrs_away = np.zeros(len(node.instances))
+    efdrs = np.zeros(len(node.instances))
+    # efdrs_home = np.zeros(len(node.instances))
+    # efdrs_away = np.zeros(len(node.instances))
     for i, inst in enumerate(node.instances):
-      efdrs_home[i] = inst.qValue[0]
-      efdrs_away[i] = inst.qValue[1]
+      efdrs[i] =  inst.qValue
+      # efdrs_home[i] = inst.qValue[0]
+      # efdrs_away[i] = inst.qValue[1]
     
-    return [efdrs_home, efdrs_away]
+    return efdrs
+    # return [efdrs_home, efdrs_away]
   
   def getCandidateDistinctions(self, node, select_interval=100):
     """
@@ -804,7 +846,7 @@ class CUTree:
     
     candidates = []
     for i in range(self.max_back_depth):
-      for j in range(0, self.n_dim):  # no action here
+      for j in range(-1, self.n_dim):  # no action here
         if j > -1 and self.dim_sizes[j] == 'continuous':
           # value=sum([inst.currentObs[j] for inst in node.instances])/len(node.instances)
           # d = Distinction(dimension=j, back_idx=i, dimension_name=self.dim_names[j],
@@ -830,7 +872,7 @@ class CUTree:
         else:
           d = Distinction(dimension=j,
                           back_idx=i,
-                          dimension_name=self.dim_names[j])
+                          dimension_name=self.dim_names[j] if j > -1 else 'actions')
           if d in anc_distinctions:
             continue
           candidates.append(d)
@@ -849,8 +891,9 @@ class UNode:
     # reward in instances maybe negative, but reward in node must be positive
     self.count = 0
     self.transitions = {}  # T(s, a, s')
-    self.qValues_home = 0
-    self.qValues_away = 0
+    # self.qValues_home = 0
+    # self.qValues_away = 0
+    self.qValues = 0
     
     self.distinction = None
     self.instances = []
@@ -862,7 +905,8 @@ class UNode:
     :param: index: if index is HOME, return Q_home, else return Q_away
     :return: maximum Q value
     """
-    return self.qValues_home if home_identifier else self.qValues_away
+    return self.qValues
+    # return self.qValues_home if home_identifier else self.qValues_away
   
   def addInstance(self, instance, max_hist):
     """
@@ -888,10 +932,11 @@ class UNode:
     :param home_identifier: identify home and away
     :return:
     """
-    self.qValues_home = (self.count * self.qValues_home + qValue[0]) \
-                        / (self.count + 1)
-    self.qValues_away = (self.count * self.qValues_away + qValue[1]) \
-                        / (self.count + 1)
+    # self.qValues_home = (self.count * self.qValues_home + qValue[0]) \
+    #                     / (self.count + 1)
+    # self.qValues_away = (self.count * self.qValues_away + qValue[1]) \
+    #                     / (self.count + 1)
+    self.qValues = (self.count * self.qValues + qValue) / (self.count + 1)
     self.count += 1
     
     # if new_state not in self.transitions:

@@ -84,7 +84,7 @@ def createNetwork():
     return s, readout, h_fc1
 
 
-def testNetwork(s, readout, h_fc1, sess):
+def testNetwork(s, readout, h_fc1, sess, gameid):
     # define the cost function
     a = tf.placeholder("float", [None, ACTIONS])
     # y = tf.placeholder("float", [None])
@@ -119,6 +119,7 @@ def testNetwork(s, readout, h_fc1, sess):
     # start training
     epsilon = INITIAL_EPSILON
     t = 0
+    transition = []
     while "flappy bird" != "angry bird":
         # choose an action epsilon greedily
         readout_t = readout.eval(feed_dict={s: [s_t]})[0]
@@ -146,10 +147,17 @@ def testNetwork(s, readout, h_fc1, sess):
         x_t1 = np.reshape(x_t1, (80, 80, 1))
         s_t1 = np.append(x_t1, s_t[:, :, :3], axis=2)
 
+        # calibration q-value
+        norm = np.linalg.norm(readout_t)
+        readout_t = [i/norm for i in readout_t]
+        
         # store the transition in D
-        transition = (s_t[:, :, 0], a_t) # (s_t, a_t, r_t, s_t1, terminal)
-        grab_transitions(transition, t)
-
+        transition.append((s_t[:, :, 0], a_t, np.max(readout_t))) # (s_t, a_t, r_t, s_t1, terminal)
+        
+        # only grab 200 frames
+        if t == 200:
+            break
+        
         # update the old values
         s_t = s_t1
         t += 1
@@ -160,6 +168,9 @@ def testNetwork(s, readout, h_fc1, sess):
         print("TIMESTEP", t, "/ STATE", state, \
               "/ EPSILON", epsilon, "/ ACTION", action_index, "/ REWARD", r_t, \
               "/ Q_MAX %e" % np.max(readout_t))
+      
+    grab_transitions(transition, t, gameid)
+    
 
 
 def trainNetwork(s, readout, h_fc1, sess):
@@ -291,20 +302,22 @@ def trainNetwork(s, readout, h_fc1, sess):
         '''
 
 
-def grab_transitions(transition, number):
-    save_dir = './save_all_transitions/transition_num{0}.p'.format(number)
-    # os.mkdir(save_dir)
-    pickle.dump(transition, open(save_dir, 'wb'))
+def grab_transitions(transition, number, gameid):
+
+    save_dir = './save_all_transitions/transition_num{0:03d}/'.format(gameid)
+    if not os.path.exists(save_dir):
+        os.mkdir(save_dir)
+        pickle.dump(transition, open(save_dir + 'game.p', 'wb'))
 
 
-def playGame():
+def playGame(gameid):
     sess = tf.InteractiveSession()
     s, readout, h_fc1 = createNetwork()
-    testNetwork(s, readout, h_fc1, sess)
-
+    testNetwork(s, readout, h_fc1, sess, gameid)
+    sess.close()
 
 def main():
-    playGame()
+    playGame(int(sys.argv[1]))
 
 
 if __name__ == "__main__":
