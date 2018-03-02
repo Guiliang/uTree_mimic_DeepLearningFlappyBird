@@ -24,12 +24,15 @@ def playGame(agent):
   x_t = cv2.cvtColor(cv2.resize(x_t, (80, 80)), cv2.COLOR_BGR2GRAY)
   ret, x_t = cv2.threshold(x_t, 1, 255, cv2.THRESH_BINARY)
   s_t = np.stack((x_t, x_t, x_t, x_t), axis=2)
+  a_list = np.stack(np.zeros(4))
   
   t = 0
   while "flappy bird" != "angry bird":
     # choose an action epsilon greedily
-    currentObs = np.reshape(s_t[:, :, 0], 6400)[:agent.problem.nStates]
+    currentObs = np.insert(np.reshape(list(s_t[:, :, 0]), 6400), 6400, a_list[:3])
     a_t = agent.utree.getBestAction(currentObs)
+    a_list = np.append(a_t, a_list[:3])
+    print("Action:", a_t)
     # a_t = agent.getQ(currentObs)
     # if (a_t[0] > a_t[1]):
     #   a_t = [1, 0]

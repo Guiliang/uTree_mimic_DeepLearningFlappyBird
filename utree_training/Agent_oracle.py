@@ -89,7 +89,6 @@ class CUTreeAgent:
     i = C_UTree.Instance(t, currentObs, None, currentObs, None, None, None)
     q_h, q_a = self.utree.getInstanceQvalues(i, None)
     return [q_h, q_a]
-
   
   def executePolicy(self, epsilon=1e-1):
     return None
@@ -130,12 +129,14 @@ class CUTreeAgent:
       # assert states.shape[0] == actions.shape[0] and actions.shape[0] == rewards.shape[0]
       
       event_number = len(game)
+      initialAction = (int)(game[0][1][1] == 1)
+      actionlist = np.stack((initialAction, initialAction, initialAction, initialAction))
       beginflag = True
       count += 1
       
       for index in range(0, event_number):
         # action = self.problem.actions[
-          # unicodedata.normalize('NFKD', actions[index]).encode('ascii', 'ignore').strip()]
+        # unicodedata.normalize('NFKD', actions[index]).encode('ascii', 'ignore').strip()]
         # nextaction = self.problem.actions[
         #   unicodedata.normalize('NFKD', actions[(index + 1) % event_number]).encode('ascii', 'ignore').strip()]
         
@@ -148,11 +149,12 @@ class CUTreeAgent:
         if self.problem.isEpisodic:
           game_info = game[index]
           states = game_info[0]
-          action = (int)(game_info[1][1]==1)
+          action = actionlist[0]
           qValue = game_info[2]
-          currentObs = np.reshape(states, 6400)[:self.problem.nStates]
+          currentObs = np.insert(np.reshape(states, 6400), 6400, actionlist[1:])
           nextObs = currentObs
-
+          actionlist = np.append(game[(index + 1) % event_number][1][1] == 1, actionlist[:3])
+          
           if index == event_number - 1:
             nextObs = np.array([-1 for i in range(len(currentObs))])  # one game end
           # elif action == 5:
@@ -179,7 +181,7 @@ class CUTreeAgent:
           # self.getQ(currentObs, [], action, reward, home_identifier)
       
       if self.problem.isEpisodic:
-        if checkpoint <= count:
+        if checkpoint < count:
           self.utree.print_tree()
           # pickle.dump(self.utree, open(TREE_PATH + "Game_File_" + str(count) + '.p', 'wb'))
           # exit(0)

@@ -61,16 +61,16 @@ class CUTree:
   #   return bestInst.action
   
   def getBestAction(self, currentObs):
-    maxCorr = 1000000
+    maxCorr = 100
     t = self.getTime()
     # action 0
     i = Instance(t, currentObs, 0, currentObs, None, None, None)
     self.insertInstance(i)
     next_state = self.getInstanceLeaf(i)
     for inst in next_state.instances:
-      sub = np.subtract(currentObs, inst.currentObs)
+      sub = (currentObs - inst.currentObs) % 254
       diff = np.var(sub)
-      if maxCorr > diff and inst.qValue is not None:
+      if maxCorr > diff:
         maxCorr = diff
     self.popInstance()
     # action 1
@@ -78,9 +78,9 @@ class CUTree:
     self.insertInstance(i)
     next_state = self.getInstanceLeaf(i)
     for inst in next_state.instances:
-      sub = np.subtract(currentObs, inst.currentObs)
+      sub = (currentObs - inst.currentObs) % 254
       diff = np.var(sub)
-      if maxCorr > diff and inst.qValue is not None:
+      if maxCorr > diff:
         return [0, 1]
     return [1, 0]
     
