@@ -45,7 +45,7 @@ class flappyBird:
     self.reset = None
     self.isEpisodic = True
     # self.isEpisodic = False
-    self.nStates = 6403  # 3 previous actions
+    self.nStates = 14400  # 3 previous actions
     self.dimNames = ['point' + str(i) for i in range(self.nStates)]
     self.dimSizes = [2 for i in range(self.nStates)]
     

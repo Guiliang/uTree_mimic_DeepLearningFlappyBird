@@ -6,7 +6,8 @@ import numpy as np
 import optparse
 import sys
 import csv
-
+import tensorflow as tf
+from utree_training import LinearRegression as lr
 from scipy.stats import ks_2samp
 
 NodeSplit = 0
@@ -16,7 +17,8 @@ ActionDimension = -1
 HOME = 0
 AWAY = 1
 MAX_DEPTH = 40
-
+MIN_LINEAR = 10
+TRIES = 2
 
 class CUTree:
   def __init__(self, gamma, n_actions, dim_sizes, dim_names, max_hist, max_back_depth=1, minSplitInstances=10,
@@ -78,11 +80,11 @@ class CUTree:
     next_state = self.getInstanceLeaf(i)
     for inst in next_state.instances:
       sub = (currentObs - inst.currentObs) % 254
-      diff = np.sum(sub[:14400]) + np.sum(sub[14400:])*6400
+      diff = np.sum(sub[:14400]) + np.sum(sub[14400:]) * 6400
       if maxCorr > diff:
         return [0, 1]
     return [1, 0]
-    
+  
   def tocsvFile(self, filename):
     '''
     Store a record of U-Tree in file, make it easier to rebuild tree
@@ -90,7 +92,7 @@ class CUTree:
     :return:
     '''
     with open(filename, 'w', newline='') as csvfile:
-      fieldname = ['idx', 'dis', 'dis_value', 'par', 'q']
+      fieldname = ['idx', 'dis', 'dis_value', 'par', 'q_act0', 'q_act1', 'linear']
       writer = csv.writer(csvfile)
       writer.writerow(fieldname)
       for i, node in self.nodes.items():
@@ -100,44 +102,18 @@ class CUTree:
                            node.distinction.continuous_divide_value if node.distinction.continuous_divide_value else None,
                            node.parent.idx if node.parent else None,
                            None,
-                           None])
+                           None,
+                           node.f_linear])
         else:
           writer.writerow([node.idx,
                            None,
                            None,
                            node.parent.idx if node.parent else None,
-                           node.qValues])
-                           # node.qValues_home,
-                           # node.qValues_away])
-  
-  def tocsvFileComplete(self, filename):
-    '''
-    Store a record of U-Tree in file including the instances in each leaf node,
-    make it easier to rebuild tree
-    :param filename: the path of file to store record
-    :return:
-    '''
-    with open(filename, 'w', newline='') as csvfile:
-      fieldnamecomplete = ['idx', 'dis', 'dis_value', 'par', 'q_home', 'q_away', 'instances']
-      writer = csv.writer(csvfile)
-      writer.writerow(fieldnamecomplete)
-      for i, node in self.nodes.items():
-        if node.nodeType == NodeSplit:
-          writer.writerow([node.idx,
-                           node.distinction.dimension,
-                           node.distinction.continuous_divide_value if node.distinction.continuous_divide_value else None,
-                           node.parent.idx if node.parent else None,
-                           None,
-                           None,
-                           None])
-        else:
-          writer.writerow([node.idx,
-                           None,
-                           None,
-                           node.parent.idx if node.parent else None,
-                           # node.qValues_home,
-                           # node.qValues_away,
-                           [inst.timestep for inst in node.instances]])
+                           node.qValues_home,
+                           node.qValues_away,
+                           node.f_linear])
+          # node.qValues_home,
+          # node.qValues_away])
   
   def fromcsvFile(self, filename):
     '''
@@ -146,7 +122,7 @@ class CUTree:
     :return:
     '''
     with open(filename, 'r') as csvfile:
-      fieldname = ['idx', 'dis', 'dis_value', 'par', 'q']
+      fieldname = ['idx', 'dis', 'dis_value', 'par', 'q_act0', 'q_act1', 'linear']
       reader = csv.reader(csvfile)
       self.node_id_count = 0
       for record in reader:
@@ -166,9 +142,12 @@ class CUTree:
         else:
           node = UNode(int(record[0]), NodeLeaf, self.nodes[int(record[3])] if record[3] else None,
                        self.n_actions, self.nodes[int(record[3])].depth + 1 if record[3] else 1)
-          node.qValues = float(record[4])
-          # node.qValues_home = float(record[4])
-          # node.qValues_away = float(record[5])
+          # node.qValues = float(record[4])
+          node.qValues_home = float(record[4])
+          node.qValues_away = float(record[5])
+        if len(record) > 6 and record[6]:
+          node.f_linear = np.array(list(map(float, record[6].replace('[', '').replace(']', '').split())))
+          node.f_linear = np.resize(node.f_linear, (2, self.n_dim + 1))
         if node.parent:
           self.nodes[int(record[3])].children.append(node)
         if node.idx == 1:
@@ -204,9 +183,9 @@ class CUTree:
                    # node.transitions_home_away,
                    # node.transitions_away_home,
                    # node.transitions_away_away,
-                   node.qValues,
-                   # node.qValues_home,
-                   # node.qValues_away,
+                   # node.qValues,
+                   node.qValues_home,
+                   node.qValues_away,
                    node.parent.idx if node.parent else None))
   
   def getInstanceQvalues(self, instance, reward):
@@ -219,7 +198,79 @@ class CUTree:
     next_state = self.getInstanceLeaf(instance)
     return next_state.utility(home_identifier=True), \
            next_state.utility(home_identifier=False)
-  
+
+  def LinearEval(self, instance, f):
+    q = f[self.n_dim]
+    for i in range(0, self.n_dim):
+      q += instance.currentObs[i] * f[i]
+    return q
+
+  def testLinear(self):
+    """
+    Serve as a public function call testLinearRecursive
+    :return:
+    """
+    return self.testLinearRecursive(self.root)
+
+  def testLinearRecursive(self, node):
+    """
+    Check each node whether leaf or not
+    :param node: any node
+    :return:
+    """
+    if node.nodeType == NodeLeaf and node.modified:
+      if len(node.instances) < MIN_LINEAR:
+        return
+      else:
+        self.getLinearFactors(node)
+        return
+    for c in node.children:
+      self.testLinearRecursive(c)
+    return
+
+  def getLinearFactors(self, node):
+    """
+    get linear factor for Q_h and Q_a, set node.f_linear=[[Q_h factors], [Q_a factors]]
+    :param node: the leaf node which all instances under it are used to generate linear q_value model
+    :return:
+    """
+    train_X = [instance.currentObs for instance in node.instances]
+    train_Y = [instance.qValue for instance in node.instances]
+    l_rate = 0.0001
+    n_epochs = 1000
+    count = 0
+    max_diff = 10000
+    tot = None
+    if node.f_linear is not None:
+      tot = np.transpose(node.f_linear)
+      W = np.delete(tot, self.n_dim, 0)
+      b = np.array([tot[self.n_dim]])
+      count += 1
+    elif node.parent and node.parent.f_linear is not None:
+      tot = np.transpose(node.parent.f_linear)
+      W = np.delete(tot, self.n_dim, 0)
+      b = np.array([tot[self.n_dim]])
+    while count < TRIES:
+      if tot is not None:
+        with tf.Session() as sess:
+          LR = lr.LinearRegression(training_epochs=int(n_epochs / 10 ** count), learning_rate=l_rate / 10 ** count)
+          LR.read_weights(weights=W, bias=b)
+          LR.linear_regression_model()
+          temp_diff, temp_W, temp_b = LR.gradient_descent(sess=sess, train_X=train_X, train_Y=train_Y)
+      else:
+        with tf.Session() as sess:
+          LR = lr.LinearRegression(training_epochs=n_epochs, learning_rate=l_rate)
+          LR.read_weights()
+          LR.linear_regression_model()
+          temp_diff, temp_W, temp_b = LR.gradient_descent(sess=sess, train_X=train_X, train_Y=train_Y)
+      if temp_diff < max_diff:
+        W = temp_W
+        b = temp_b
+        max_diff = temp_diff
+      count += 1
+    node.f_linear = np.concatenate((np.transpose(W), np.transpose(b)), axis=1)
+    print("finish linear, node: " + str(node.idx))
+
   def getTime(self):
     """
     :return: length of history
@@ -303,8 +354,8 @@ class CUTree:
     #    self.history = self.history[1:]
   
   def popInstance(self):
-    self.history.pop(len(self.history)-1)
-    
+    self.history.pop(len(self.history) - 1)
+  
   def nextInstance(self, instance):
     """
     get the next instance
@@ -437,7 +488,7 @@ class CUTree:
     '''
     self.node_id_count -= count
   
-  def split(self, node, distinction):
+  def split(self, node, distinction, linearflag):
     """
     split decision tree on nodes
     :param node: node to split
@@ -486,6 +537,15 @@ class CUTree:
       if n.nodeType == NodeLeaf:
         self.modelFromInstances(n)
     
+    # Set linear boosting
+    for n in node.children:
+      if linearflag:
+        n.modified = True
+        self.testLinearRecursive(n)
+        n.modified = False
+      else:
+        n.f_linear = node.f_linear
+
     node.instances = []
     # update Q-values for children
     # for n in node.children:
@@ -545,14 +605,14 @@ class CUTree:
     # clear children
     node.children = []
   
-  def testFringe(self):
+  def testFringe(self, linearflag):
     """
     Tests fringe nodes for viable splits, splits nodes if they're found
     :return: how many real splits it takes
     """
-    return self.testFringeRecursive(self.root)  # starting from root
+    return self.testFringeRecursive(self.root, linearflag)  # starting from root
   
-  def testFringeRecursive(self, node):
+  def testFringeRecursive(self, node, linearflag):
     """
     recursively perform test in fringe, until return total number of split
     :param node: node to test
@@ -564,14 +624,14 @@ class CUTree:
       node.modified = False
       d = self.getUtileDistinction(node)  # test is performed here
       if d:  # if find distinction, use distinction to split
-        self.split(node, d)  # please use break point to see how to split here
-        return 1 + self.testFringeRecursive(node)
+        self.split(node, d, linearflag)  # please use break point to see how to split here
+        return 1 + self.testFringeRecursive(node, linearflag)
       return 0
     
     # assert node.nodeType == NodeSplit
     total = 0
     for c in node.children:
-      total += self.testFringeRecursive(c)
+      total += self.testFringeRecursive(c, linearflag)
     return total
   
   def getUtileDistinction(self, node):
@@ -751,11 +811,11 @@ class CUTree:
     :return:
     """
     assert node.nodeType == NodeLeaf
-    root_utils = self.getQs(node)
-    variance = np.var(root_utils)
-    # root_utils_home, root_utils_away = self.getQs(node)
-    # variance_home = np.var(root_utils_home)
-    # variance_away = np.var(root_utils_away)
+    # root_utils = self.getQs(node)
+    # variance = np.var(root_utils)
+    root_utils_home, root_utils_away = self.getQs(node)
+    variance_home = np.var(root_utils_home)
+    variance_away = np.var(root_utils_away)
     diff_max = float(0)
     cd_split = None
     for cd in cds:
@@ -767,33 +827,34 @@ class CUTree:
           stop = 1
           break
         child_qs.append(self.getQs(c))
-        
+      
       self.unsplit(node)
       if stop == 1:
         continue
-        
+      
       for i, cq in enumerate(child_qs):
         
-        if (len(cq) == 0):
-        # if len(cq[0]) == 0 or len(cq[1]) == 0:
+        # if (len(cq) == 0):
+        if len(cq[0]) == 0 or len(cq[1]) == 0:
           continue
         else:
-          variance_child = np.var(cq)
-          # variance_child_home = np.var(cq[0])
+          # variance_child = np.var(cq)
+          variance_child_home = np.var(cq[0])
+          variance_child_away = np.var(cq[1])
           
-          diff = abs(variance - variance_child)
-          # diff_home = abs(variance_home - variance_child_home)
-          # diff_away = abs(variance_away - variance_child_away)
-          # diff = diff_home if diff_home > diff_away else diff_away
+          # diff = abs(variance - variance_child)
+          diff_home = abs(variance_home - variance_child_home)
+          diff_away = abs(variance_away - variance_child_away)
+          diff = diff_home if diff_home > diff_away else diff_away
           if diff > diff_significanceLevel and diff > diff_max:
             diff_max = diff
             cd_split = cd
             print('vanriance test passed, diff=', diff, ',d=', cd.dimension)
-    
+      
       # hand split action
-      if cd.dimension == ActionDimension and cd_split is not None:
-        break
-        
+      # if cd.dimension == ActionDimension and cd_split is not None:
+      #   break
+    
     if cd_split:
       print('Will be split, p=', diff_max, ',d=', cd_split.dimension_name)
       return cd_split
@@ -820,16 +881,16 @@ class CUTree:
     Get all expected future discounted returns for all instances in a node
     (q-value is just the average EFDRs)
     """
-    efdrs = np.zeros(len(node.instances))
-    # efdrs_home = np.zeros(len(node.instances))
-    # efdrs_away = np.zeros(len(node.instances))
+    # efdrs = np.zeros(len(node.instances))
+    efdrs_home = np.zeros(len(node.instances))
+    efdrs_away = np.zeros(len(node.instances))
     for i, inst in enumerate(node.instances):
-      efdrs[i] =  inst.qValue
-      # efdrs_home[i] = inst.qValue[0]
-      # efdrs_away[i] = inst.qValue[1]
+      # efdrs[i] = inst.qValue
+      efdrs_home[i] = inst.qValue[0]
+      efdrs_away[i] = inst.qValue[1]
     
-    return efdrs
-    # return [efdrs_home, efdrs_away]
+    # return efdrs
+    return [efdrs_home, efdrs_away]
   
   def getCandidateDistinctions(self, node, select_interval=100):
     """
@@ -846,7 +907,7 @@ class CUTree:
     
     candidates = []
     for i in range(self.max_back_depth):
-      for j in range(-1, self.n_dim):  # no action here
+      for j in range(0, self.n_dim):  # no action here
         if j > -1 and self.dim_sizes[j] == 'continuous':
           # value=sum([inst.currentObs[j] for inst in node.instances])/len(node.instances)
           # d = Distinction(dimension=j, back_idx=i, dimension_name=self.dim_names[j],
@@ -891,12 +952,15 @@ class UNode:
     # reward in instances maybe negative, but reward in node must be positive
     self.count = 0
     self.transitions = {}  # T(s, a, s')
-    # self.qValues_home = 0
-    # self.qValues_away = 0
-    self.qValues = 0
+    self.qValues_home = 0
+    self.qValues_away = 0
+    # self.qValues = 0
     
     self.distinction = None
     self.instances = []
+
+    # linear regression model
+    self.f_linear = None
     
     self.depth = depth
     
@@ -907,8 +971,8 @@ class UNode:
     :param: index: if index is HOME, return Q_home, else return Q_away
     :return: maximum Q value
     """
-    return self.qValues
-    # return self.qValues_home if home_identifier else self.qValues_away
+    # return self.qValues
+    return self.qValues_home if home_identifier else self.qValues_away
   
   def addInstance(self, instance, max_hist):
     """
@@ -936,11 +1000,11 @@ class UNode:
     :param home_identifier: identify home and away
     :return:
     """
-    # self.qValues_home = (self.count * self.qValues_home + qValue[0]) \
-    #                     / (self.count + 1)
-    # self.qValues_away = (self.count * self.qValues_away + qValue[1]) \
-    #                     / (self.count + 1)
-    self.qValues = (self.count * self.qValues + qValue) / (self.count + 1)
+    self.qValues_home = (self.count * self.qValues_home + qValue[0]) \
+                        / (self.count + 1)
+    self.qValues_away = (self.count * self.qValues_away + qValue[1]) \
+                        / (self.count + 1)
+    # self.qValues = (self.count * self.qValues + qValue) / (self.count + 1)
     self.count += 1
     
     # if new_state not in self.transitions:

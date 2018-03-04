@@ -11,6 +11,7 @@ sys.path.append("game/")
 import game.wrapped_flappy_bird as game
 import random
 import numpy as np
+from scipy import ndimage
 from collections import deque
 
 GAME = 'bird'  # the name of the game being played for log files
@@ -119,6 +120,7 @@ def testNetwork(s, readout, h_fc1, sess, gameid):
     # start training
     epsilon = INITIAL_EPSILON
     t = 0
+    temp = np.zeros((4, 45, 80))
     transition = []
     while "flappy bird" != "angry bird":
         # choose an action epsilon greedily
@@ -152,10 +154,12 @@ def testNetwork(s, readout, h_fc1, sess, gameid):
         readout_t = [i/norm for i in readout_t]
         
         # store the transition in D
-        transition.append((s_t[:, :, 0], a_t, np.max(readout_t))) # (s_t, a_t, r_t, s_t1, terminal)
+        for i in range(4):
+            temp[i] = ndimage.rotate(s_t1[:, :, i], 270)[:][10:55]
+        transition.append((temp, a_t, readout_t)) # (s_t, a_t, r_t, s_t1, terminal)
         
         # only grab 200 frames
-        if t == 200:
+        if t == 400:
             break
         
         # update the old values

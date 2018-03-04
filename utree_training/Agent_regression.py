@@ -4,9 +4,9 @@ import numpy as np
 import scipy.io as sio
 import os
 import pickle
-from utree_training import C_UTree_oracle as C_UTree
+from utree_training import C_UTree_regression as C_UTree
 
-TREE_PATH = "save_utree/"
+TREE_PATH = "save_regression_utree/"
 HOME_PATH = "/local-scratch/csv_oracle/"
 
 
@@ -53,7 +53,7 @@ class CUTreeAgent:
     self.valiter = 1
     self.problem = problem
   
-  def update(self, currentObs, nextObs, action, qValue, value_iter=0, check_fringe=0,
+  def update(self, currentObs, nextObs, action, qValue, check_linear=0, check_fringe=0,
              home_identifier=None, beginflag=False):
     """
     update the tree
@@ -72,9 +72,12 @@ class CUTreeAgent:
     
     # if value_iter:
     #   self.utree.sweepLeaves()  # value iteration is performed here
+    if check_linear:
+      self.utree.testLinear()  # Linear regression model is performed here
+      print("Finish LR in leaves")
     
     if check_fringe:
-      self.utree.testFringe()  # ks test is performed here
+      self.utree.testFringe(check_linear)  # ks test is performed here
   
   def getQ(self, currentObs):
     """
@@ -115,7 +118,7 @@ class CUTreeAgent:
     
     count = 0
     
-    checkpoint = 1
+    checkpoint = 0
     if checkpoint > 0:
       self.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(checkpoint) + ".csv")
     
@@ -129,8 +132,8 @@ class CUTreeAgent:
       # assert states.shape[0] == actions.shape[0] and actions.shape[0] == rewards.shape[0]
       
       event_number = len(game)
-      initialAction = (int)(game[0][1][1] == 1)
-      actionlist = np.stack((initialAction, initialAction, initialAction, initialAction))
+      # initialAction = (int)(game[0][1][1] == 1)
+      # actionlist = np.stack((initialAction, initialAction, initialAction, initialAction))
       beginflag = True
       count += 1
       
@@ -149,11 +152,11 @@ class CUTreeAgent:
         if self.problem.isEpisodic:
           game_info = game[index]
           states = game_info[0]
-          action = actionlist[0]
+          action = game_info[1][1]
           qValue = game_info[2]
-          currentObs = np.insert(np.reshape(states, 14400), 14400, actionlist[1:])
+          currentObs = np.reshape(states, 14400)
           nextObs = currentObs
-          actionlist = np.append(game[(index + 1) % event_number][1][1] == 1, actionlist[:3])
+          # actionlist = np.append(game[(index + 1) % event_number][1][1] == 1, actionlist[:3])
           
           if index == event_number - 1:
             nextObs = np.array([-1 for i in range(len(currentObs))])  # one game end
@@ -165,7 +168,7 @@ class CUTreeAgent:
           if count <= checkpoint:
             self.update(currentObs, nextObs, action, qValue, beginflag=beginflag)
           elif index % self.cff == 0:  # check fringe, check fringe after cff iterations
-            self.update(currentObs, nextObs, action, qValue, value_iter=1, check_fringe=1, beginflag=beginflag)
+            self.update(currentObs, nextObs, action, qValue, check_linear=1, check_fringe=1, beginflag=beginflag)
           else:
             self.update(currentObs, nextObs, action, qValue, beginflag=beginflag)
           
@@ -183,9 +186,9 @@ class CUTreeAgent:
       if self.problem.isEpisodic:
         if checkpoint < count:
           self.utree.print_tree()
-          # pickle.dump(self.utree, open(TREE_PATH + "Game_File_" + str(count) + '.p', 'wb'))
+          pickle.dump(self.utree, open(TREE_PATH + "Game_File_" + str(count) + '.p', 'wb'))
           # exit(0)
-          self.utree.tocsvFile(TREE_PATH + "Game_File_" + str(count) + ".csv")
+          # self.utree.tocsvFile(TREE_PATH + "Game_File_" + str(count) + ".csv")
           # self.utree.tocsvFile(HOME_PATH + "Game_File_" + str(count) + ".csv")
         # print out tree info
         print("Game File " + str(count))

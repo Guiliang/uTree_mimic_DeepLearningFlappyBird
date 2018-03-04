@@ -6,16 +6,13 @@ from scipy import ndimage
 import matplotlib.pyplot as plt
 
 
-temp = pickle.load(open('./save_all_transitions/transition_num11.p', mode='rb'))
+temp = pickle.load(open('./save_all_transitions/transition_num000/game.p', mode='rb'))
 
-observation = temp[0]
-
+observation = temp[10][0]
+print(observation[0])
 first_image = observation
-first_image = np.flip(first_image, axis=1)
-first_image = ndimage.rotate(first_image, 90)
-
+first_image = ndimage.rotate(first_image, 270)[:][10:55]
 plt.imshow(first_image)
-
 plt.show()
 
 print('testing')

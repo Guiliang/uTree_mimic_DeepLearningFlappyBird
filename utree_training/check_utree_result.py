@@ -31,7 +31,7 @@ def playGame(agent):
     # choose an action epsilon greedily
     currentObs = np.insert(np.reshape(list(s_t[:, :, 0]), 6400), 6400, a_list[:3])
     a_t = agent.utree.getBestAction(currentObs)
-    a_list = np.append(a_t, a_list[:3])
+    a_list = np.append(a_t[1], a_list[:3])
     print("Action:", a_t)
     # a_t = agent.getQ(currentObs)
     # if (a_t[0] > a_t[1]):
