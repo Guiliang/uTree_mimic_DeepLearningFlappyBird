@@ -131,7 +131,7 @@ class CUTreeAgent:
       event_number = len(game)
       initialAction = (int)(game[0][1][1] == 1)
       actionlist = np.stack((initialAction, initialAction, initialAction, initialAction))
-      beginflag = True
+      beginflag = False
       count += 1
       
       for index in range(0, event_number):

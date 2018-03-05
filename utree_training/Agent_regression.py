@@ -120,7 +120,8 @@ class CUTreeAgent:
     
     checkpoint = 0
     if checkpoint > 0:
-      self.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(checkpoint) + ".csv")
+      self.utree = pickle.load(open(TREE_PATH + "Game_File_" + str(checkpoint) + '.p', 'rb'))
+      # self.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(checkpoint) + ".csv")
     
     for game_dir in game_dir_all:
       
@@ -134,7 +135,7 @@ class CUTreeAgent:
       event_number = len(game)
       # initialAction = (int)(game[0][1][1] == 1)
       # actionlist = np.stack((initialAction, initialAction, initialAction, initialAction))
-      beginflag = True
+      beginflag = False
       count += 1
       
       for index in range(0, event_number):
@@ -166,8 +167,9 @@ class CUTreeAgent:
           
           # This should only apply once to ensure no duplicate instances
           if count <= checkpoint:
+            break
             self.update(currentObs, nextObs, action, qValue, beginflag=beginflag)
-          elif index % self.cff == 0:  # check fringe, check fringe after cff iterations
+          elif index % self.cff == self.cff - 1:  # check fringe, check fringe after cff iterations
             self.update(currentObs, nextObs, action, qValue, check_linear=1, check_fringe=1, beginflag=beginflag)
           else:
             self.update(currentObs, nextObs, action, qValue, beginflag=beginflag)

@@ -232,16 +232,16 @@ class CUTree:
     :param instance: instance to add
     :return:
     """
-    old_state = self.getLeaf(previous=1)  # get the leaf
+    # old_state = self.getLeaf(previous=1)  # get the leaf
     # if old_state == self.term:  # if leaf is the dummy terminal node
     #     return
     self.insertInstance(instance)  # add the new instance to U-Tree history
     new_state = self.getLeaf()  # get the leaf of next state
     new_state.addInstance(instance, self.max_hist)  # add the instance to leaf node
     if not beginflag:  # last instance is not goal and not the beginning of the game
-      old_state.updateModel(None, None, None, None, self.history[-2].qValue)
-    if instance.nextObs[0] == -1:  # this instance lead to goal
       new_state.updateModel(None, None, None, None, instance.qValue)
+    # if instance.nextObs[0] == -1:  # this instance lead to goal
+    #   new_state.updateModel(None, None, None, None, instance.qValue)
   
   def sweepLeaves(self):
     '''

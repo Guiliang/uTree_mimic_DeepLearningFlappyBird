@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fe0b70d1-dc56-4491-a937-8291896e996e" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/utree_training/Agent_regression.py" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/utree_training/C_UTree_regression.py" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/utree_training/LinearRegression.py" />
+    <list default="true" id="fe0b70d1-dc56-4491-a937-8291896e996e" name="Default" comment=":beer: fix bug in regression">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/check_save_transitions.py" afterPath="$PROJECT_DIR$/check_save_transitions.py" />
-      <change beforePath="$PROJECT_DIR$/deep_q_network.py" afterPath="$PROJECT_DIR$/deep_q_network.py" />
       <change beforePath="$PROJECT_DIR$/game/wrapped_flappy_bird.py" afterPath="$PROJECT_DIR$/game/wrapped_flappy_bird.py" />
-      <change beforePath="$PROJECT_DIR$/save_utree/Game_File_100.csv" afterPath="" />
       <change beforePath="$PROJECT_DIR$/utree_training/Agent_oracle.py" afterPath="$PROJECT_DIR$/utree_training/Agent_oracle.py" />
+      <change beforePath="$PROJECT_DIR$/utree_training/Agent_regression.py" afterPath="$PROJECT_DIR$/utree_training/Agent_regression.py" />
       <change beforePath="$PROJECT_DIR$/utree_training/C_UTree_oracle.py" afterPath="$PROJECT_DIR$/utree_training/C_UTree_oracle.py" />
-      <change beforePath="$PROJECT_DIR$/utree_training/Problem_flappyBird.py" afterPath="$PROJECT_DIR$/utree_training/Problem_flappyBird.py" />
-      <change beforePath="$PROJECT_DIR$/utree_training/check_utree_result.py" afterPath="$PROJECT_DIR$/utree_training/check_utree_result.py" />
-      <change beforePath="$PROJECT_DIR$/utree_training/test.py" afterPath="$PROJECT_DIR$/utree_training/test.py" />
+      <change beforePath="$PROJECT_DIR$/utree_training/C_UTree_regression.py" afterPath="$PROJECT_DIR$/utree_training/C_UTree_regression.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,7 +22,7 @@
     <SUITE FILE_PATH="coverage/DeepLearningFlappyBird$deep_q_network.coverage" NAME="deep_q_network Coverage Results" MODIFIED="1518918200504" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DeepLearningFlappyBird$deep_q_network__1_.coverage" NAME="deep_q_network (1) Coverage Results" MODIFIED="1518916356467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$check_save_transitions.coverage" NAME="check_save_transitions Coverage Results" MODIFIED="1520146785530" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$test.coverage" NAME="test Coverage Results" MODIFIED="1520160263864" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$test.coverage" NAME="test Coverage Results" MODIFIED="1520207699662" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$check_utree_result.coverage" NAME="check_utree_result Coverage Results" MODIFIED="1520134745157" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$py_test_in_uTree_mimic_DeepLearningFlappyBird.coverage" NAME="py.test in uTree_mimic_DeepLearningFlappyBird Coverage Results" MODIFIED="1519370179003" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
@@ -51,8 +44,8 @@
       <file leaf-file-name="Agent_regression.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utree_training/Agent_regression.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="28">
-              <caret line="120" column="18" lean-forward="false" selection-start-line="120" selection-start-column="18" selection-end-line="120" selection-end-column="18" />
+            <state relative-caret-position="1665">
+              <caret line="179" column="17" lean-forward="false" selection-start-line="179" selection-start-column="17" selection-end-line="179" selection-end-column="17" />
               <folding>
                 <element signature="e#56#74#0" expanded="true" />
               </folding>
@@ -63,15 +56,15 @@
       <file leaf-file-name="C_UTree_regression.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/utree_training/C_UTree_regression.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="287">
-              <caret line="241" column="20" lean-forward="true" selection-start-line="241" selection-start-column="20" selection-end-line="241" selection-end-column="20" />
+            <state relative-caret-position="-18">
+              <caret line="292" column="58" lean-forward="false" selection-start-line="292" selection-start-column="58" selection-end-line="292" selection-end-column="58" />
               <folding>
                 <element signature="e#56#69#0" expanded="true" />
-                <element signature="e#13310#13868#0" expanded="false" />
-                <element signature="e#13923#14329#0" expanded="false" />
-                <element signature="e#22717#25486#0" expanded="false" />
-                <element signature="e#25525#27688#0" expanded="false" />
-                <element signature="e#27731#28464#0" expanded="false" />
+                <element signature="e#13324#13882#0" expanded="false" />
+                <element signature="e#13937#14343#0" expanded="false" />
+                <element signature="e#22731#25500#0" expanded="false" />
+                <element signature="e#25539#27702#0" expanded="false" />
+                <element signature="e#27745#28478#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -80,8 +73,8 @@
       <file leaf-file-name="LinearRegression.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utree_training/LinearRegression.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-140">
-              <caret line="34" column="58" lean-forward="false" selection-start-line="34" selection-start-column="58" selection-end-line="34" selection-end-column="58" />
+            <state relative-caret-position="13">
+              <caret line="135" column="37" lean-forward="false" selection-start-line="135" selection-start-column="37" selection-end-line="136" selection-end-column="43" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -92,7 +85,7 @@
       <file leaf-file-name="check_utree_result.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utree_training/check_utree_result.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="451">
+            <state relative-caret-position="-295">
               <caret line="38" column="11" lean-forward="false" selection-start-line="38" selection-start-column="11" selection-end-line="38" selection-end-column="11" />
               <folding />
             </state>
@@ -158,16 +151,16 @@
         <option value="$PROJECT_DIR$/Agent_oracle.py" />
         <option value="$PROJECT_DIR$/game/wrapped_flappy_bird.py" />
         <option value="$PROJECT_DIR$/utree_training/check_utree_result.py" />
-        <option value="$PROJECT_DIR$/utree_training/C_UTree_oracle.py" />
         <option value="$PROJECT_DIR$/check_save_transitions.py" />
-        <option value="$PROJECT_DIR$/utree_training/Agent_oracle.py" />
         <option value="$PROJECT_DIR$/utree_training/test.py" />
         <option value="$PROJECT_DIR$/deep_q_network.py" />
         <option value="$PROJECT_DIR$/deep_q_network.py" />
         <option value="$PROJECT_DIR$/utree_training/Problem_flappyBird.py" />
-        <option value="$PROJECT_DIR$/utree_training/Agent_regression.py" />
         <option value="$PROJECT_DIR$/utree_training/LinearRegression.py" />
+        <option value="$PROJECT_DIR$/utree_training/Agent_regression.py" />
         <option value="$PROJECT_DIR$/utree_training/C_UTree_regression.py" />
+        <option value="$PROJECT_DIR$/utree_training/Agent_oracle.py" />
+        <option value="$PROJECT_DIR$/utree_training/C_UTree_oracle.py" />
       </list>
     </option>
   </component>
@@ -233,6 +226,11 @@
             <path>
               <item name="uTree_mimic_DeepLearningFlappyBird" type="b2602c69:ProjectViewProjectNode" />
               <item name="uTree_mimic_DeepLearningFlappyBird" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="uTree_mimic_DeepLearningFlappyBird" type="b2602c69:ProjectViewProjectNode" />
+              <item name="uTree_mimic_DeepLearningFlappyBird" type="462c0819:PsiDirectoryNode" />
+              <item name="save_regression_utree" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="uTree_mimic_DeepLearningFlappyBird" type="b2602c69:ProjectViewProjectNode" />
@@ -627,7 +625,14 @@
       <option name="project" value="LOCAL" />
       <updated>1519974836446</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary=":shit: Bad result, decide to use regression now, python3 friendly">
+      <created>1520160670928</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1520160670928</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -646,7 +651,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.50625" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39162305" sideWeight="0.49375" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.373822" sideWeight="0.49375" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15602094" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1453125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -655,7 +660,7 @@
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.375" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.071204185" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34136125" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -699,7 +704,8 @@
     <MESSAGE value=":beer: a little bit better result" />
     <MESSAGE value=":beer: split q-values" />
     <MESSAGE value=":sparkles: solve a fatal problem in training (action backtrack)." />
-    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: solve a fatal problem in training (action backtrack)." />
+    <MESSAGE value=":shit: Bad result, decide to use regression now, python3 friendly" />
+    <option name="LAST_COMMIT_MESSAGE" value=":shit: Bad result, decide to use regression now, python3 friendly" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -714,6 +720,11 @@
           <line>15</line>
           <option name="timeStamp" value="115" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utree_training/Agent_regression.py</url>
+          <line>172</line>
+          <option name="timeStamp" value="133" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -722,7 +733,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="123" />
+      <option name="time" value="134" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -730,58 +741,68 @@
         <watch expression="next_state" />
         <watch expression="np.shape(states)" language="Python" />
         <watch expression="checkpoint" />
+        <watch expression="checkpoint" />
+        <watch expression="self.utree.nodes[8]" />
+        <watch expression="self.utree.nodes[9]" />
+        <watch expression="self.utree.nodes[7]" />
+        <watch expression="self.utree.nodes[4]" />
+        <watch expression="self.history[609].currentObs[624]" language="Python" />
+        <watch expression="self.nodes" />
+        <watch expression="__py_debug_temp_var_159797513" />
+        <watch expression="__py_debug_temp_var_159797513" />
+        <watch expression="__py_debug_temp_var_159797513" />
       </configuration>
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
       <expression>
-        <expression-string>np.shape(states)</expression-string>
+        <expression-string>self.history[609].currentObs[624]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>states[1]</expression-string>
+        <expression-string>self.history[699].currentObs[624]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.reshape(sub[:6400],(80,80))</expression-string>
+        <expression-string>self.history[604].currentObs[624]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.reshape(sub,(80,80))</expression-string>
+        <expression-string>self.history[602].currentObs[624]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>game_info[1][1]</expression-string>
+        <expression-string>self.history[401].currentObs[624]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>game_info[1]</expression-string>
+        <expression-string>self.history[103].currentObs[624]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>currentObs[6338]-inst.currentObs[6338]</expression-string>
+        <expression-string>self.history[300].currentObs[624]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>currentObs[6353]-inst.currentObs[6353]</expression-string>
+        <expression-string>self.history[289].currentObs[624]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>inst.currentObs[6338]</expression-string>
+        <expression-string>self.history[599].currentObs[624]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>currentObs[6338]</expression-string>
+        <expression-string>self.history[600].currentObs[624]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -1099,28 +1120,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utree_training/check_utree_result.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="38" column="11" lean-forward="false" selection-start-line="38" selection-start-column="11" selection-end-line="38" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utree_training/C_UTree_oracle.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="66" column="26" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="1028" selection-end-column="0" />
-          <folding>
-            <element signature="e#56#69#0" expanded="true" />
-            <element signature="e#20791#23560#0" expanded="false" />
-            <element signature="e#25805#26538#0" expanded="false" />
-            <element signature="e#26544#26578#0" expanded="false" />
-            <element signature="e#29658#29706#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/deep_q_network.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
@@ -1137,13 +1136,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/check_save_transitions.py">
+    <entry file="file://$PROJECT_DIR$/save_regression_utree/Game_File_1.csv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="10" column="20" lean-forward="false" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1155,55 +1152,74 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utree_training/Agent_oracle.py">
+    <entry file="file://$PROJECT_DIR$/check_save_transitions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1981">
-          <caret line="125" column="21" lean-forward="false" selection-start-line="125" selection-start-column="21" selection-end-line="125" selection-end-column="21" />
-          <folding>
-            <element signature="e#56#74#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save_regression_utree/Game_File_1.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="140">
+          <caret line="10" column="20" lean-forward="false" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utree_training/Agent_regression.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="120" column="18" lean-forward="false" selection-start-line="120" selection-start-column="18" selection-end-line="120" selection-end-column="18" />
-          <folding>
-            <element signature="e#56#74#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/utree_training/LinearRegression.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-140">
-          <caret line="34" column="58" lean-forward="false" selection-start-line="34" selection-start-column="58" selection-end-line="34" selection-end-column="58" />
+        <state relative-caret-position="13">
+          <caret line="135" column="37" lean-forward="false" selection-start-line="135" selection-start-column="37" selection-end-line="136" selection-end-column="43" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/utree_training/check_utree_result.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-295">
+          <caret line="38" column="11" lean-forward="false" selection-start-line="38" selection-start-column="11" selection-end-line="38" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utree_training/Agent_regression.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1665">
+          <caret line="179" column="17" lean-forward="false" selection-start-line="179" selection-start-column="17" selection-end-line="179" selection-end-column="17" />
+          <folding>
+            <element signature="e#56#74#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utree_training/Agent_oracle.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="149">
+          <caret line="133" column="23" lean-forward="false" selection-start-line="133" selection-start-column="23" selection-end-line="133" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utree_training/C_UTree_oracle.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="616">
+          <caret line="244" column="2" lean-forward="true" selection-start-line="244" selection-start-column="2" selection-end-line="244" selection-end-column="2" />
+          <folding>
+            <element signature="e#20789#23558#0" expanded="false" />
+            <element signature="e#25803#26536#0" expanded="false" />
+            <element signature="e#26542#26576#0" expanded="false" />
+            <element signature="e#29656#29704#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/utree_training/C_UTree_regression.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="241" column="20" lean-forward="true" selection-start-line="241" selection-start-column="20" selection-end-line="241" selection-end-column="20" />
+        <state relative-caret-position="-18">
+          <caret line="292" column="58" lean-forward="false" selection-start-line="292" selection-start-column="58" selection-end-line="292" selection-end-column="58" />
           <folding>
             <element signature="e#56#69#0" expanded="true" />
-            <element signature="e#13310#13868#0" expanded="false" />
-            <element signature="e#13923#14329#0" expanded="false" />
-            <element signature="e#22717#25486#0" expanded="false" />
-            <element signature="e#25525#27688#0" expanded="false" />
-            <element signature="e#27731#28464#0" expanded="false" />
+            <element signature="e#13324#13882#0" expanded="false" />
+            <element signature="e#13937#14343#0" expanded="false" />
+            <element signature="e#22731#25500#0" expanded="false" />
+            <element signature="e#25539#27702#0" expanded="false" />
+            <element signature="e#27745#28478#0" expanded="false" />
           </folding>
         </state>
       </provider>
