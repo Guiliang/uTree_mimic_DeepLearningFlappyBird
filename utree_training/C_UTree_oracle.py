@@ -16,6 +16,8 @@ ActionDimension = -1
 HOME = 0
 AWAY = 1
 MAX_DEPTH = 40
+LOW_COLOR = 40
+HIGH_COLOR = 220
 
 
 class CUTree:
@@ -60,14 +62,14 @@ class CUTree:
   #   return bestInst.action
   
   def getBestAction(self, currentObs):
-    maxCorr = 100000
+    maxCorr = 10000000
     t = self.getTime()
     # action 0
     i = Instance(t, currentObs, 0, currentObs, None, None, None)
     self.insertInstance(i)
     next_state = self.getInstanceLeaf(i)
     for inst in next_state.instances:
-      sub = (currentObs - inst.currentObs) % 254
+      sub = abs(currentObs - inst.currentObs) / 255
       diff = np.sum(sub[:14400])
       if maxCorr > diff:
         maxCorr = diff
@@ -77,12 +79,14 @@ class CUTree:
     self.insertInstance(i)
     next_state = self.getInstanceLeaf(i)
     for inst in next_state.instances:
-      sub = (currentObs - inst.currentObs) % 254
-      diff = np.sum(sub[:14400]) + np.sum(sub[14400:])*6400
+      sub = abs(currentObs - inst.currentObs) / 255
+      diff = np.sum(sub[:14400]) + np.sum(sub[14400:]) * 25500000
       if maxCorr > diff:
+        self.popInstance()
         return [0, 1]
+    self.popInstance()
     return [1, 0]
-    
+  
   def tocsvFile(self, filename):
     '''
     Store a record of U-Tree in file, make it easier to rebuild tree
@@ -107,8 +111,8 @@ class CUTree:
                            None,
                            node.parent.idx if node.parent else None,
                            node.qValues])
-                           # node.qValues_home,
-                           # node.qValues_away])
+          # node.qValues_home,
+          # node.qValues_away])
   
   def tocsvFileComplete(self, filename):
     '''
@@ -159,7 +163,8 @@ class CUTree:
                        self.n_actions, self.nodes[int(record[3])].depth + 1 if record[3] else 1)
           node.distinction = Distinction(dimension=int(record[1]),
                                          back_idx=0,
-                                         dimension_name=self.dim_names[int(record[1])],
+                                         dimension_name=self.dim_names[int(record[1])]
+                                         if int(record[1])>-1 else 'actions',
                                          iscontinuous=True if record[2] else False,
                                          continuous_divide_value=float(record[2]) if record[
                                            2] else None)  # default back_idx is 0
@@ -217,8 +222,17 @@ class CUTree:
     self.insertInstance(instance)
     # set goal's q_value as equal to previous shot
     next_state = self.getInstanceLeaf(instance)
-    return next_state.utility(home_identifier=True), \
-           next_state.utility(home_identifier=False)
+    self.popInstance()
+    return next_state.utility(True)
+    # return next_state.utility(home_identifier=True), \
+    #        next_state.utility(home_identifier=False)
+  
+  def getInstanceFigure(self, instance):
+    self.insertInstance(instance)
+    # set goal's q_value as equal to previous shot
+    fig = self.getInstanceLeafWithColor(instance)
+    self.popInstance()
+    return fig
   
   def getTime(self):
     """
@@ -303,8 +317,8 @@ class CUTree:
     #    self.history = self.history[1:]
   
   def popInstance(self):
-    self.history.pop(len(self.history)-1)
-    
+    self.history.pop(len(self.history) - 1)
+  
   def nextInstance(self, instance):
     """
     get the next instance
@@ -397,6 +411,21 @@ class CUTree:
       child = node.applyDistinction(self.history, idx)
       node = node.children[child]  # go the children node
     return node
+  
+  def getInstanceLeafWithColor(self, inst):
+    idx = inst.timestep
+    fig = inst.currentObs[:14400]
+    node = self.root
+    while node.nodeType != NodeLeaf:  # iteratively find children
+      child = node.applyDistinction(self.history, idx)
+      dis_num = node.distinction.dimension
+      if dis_num < 14400 and dis_num != -1:
+        if child == 0:
+          fig[dis_num] = LOW_COLOR
+        else:
+          fig[dis_num] = HIGH_COLOR
+      node = node.children[child]
+    return fig
   
   def getInstanceLeaf(self, inst, ntype=NodeLeaf, previous=0):
     """
@@ -767,15 +796,15 @@ class CUTree:
           stop = 1
           break
         child_qs.append(self.getQs(c))
-        
+      
       self.unsplit(node)
       if stop == 1:
         continue
-        
+      
       for i, cq in enumerate(child_qs):
         
         if (len(cq) == 0):
-        # if len(cq[0]) == 0 or len(cq[1]) == 0:
+          # if len(cq[0]) == 0 or len(cq[1]) == 0:
           continue
         else:
           variance_child = np.var(cq)
@@ -789,11 +818,11 @@ class CUTree:
             diff_max = diff
             cd_split = cd
             print('vanriance test passed, diff=', diff, ',d=', cd.dimension)
-    
+      
       # hand split action
       if cd.dimension == ActionDimension and cd_split is not None:
         break
-        
+    
     if cd_split:
       print('Will be split, p=', diff_max, ',d=', cd_split.dimension_name)
       return cd_split
@@ -824,7 +853,7 @@ class CUTree:
     # efdrs_home = np.zeros(len(node.instances))
     # efdrs_away = np.zeros(len(node.instances))
     for i, inst in enumerate(node.instances):
-      efdrs[i] =  inst.qValue
+      efdrs[i] = inst.qValue
       # efdrs_home[i] = inst.qValue[0]
       # efdrs_away[i] = inst.qValue[1]
     

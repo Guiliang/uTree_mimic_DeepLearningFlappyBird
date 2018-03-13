@@ -4,10 +4,17 @@ import numpy as np
 import scipy.io as sio
 import os
 import pickle
-from utree_training import C_UTree_regression as C_UTree
+import inspect
+import random
+import csv
+# from utree_training import C_UTree_regression as C_UTree
+import C_UTree_regression as C_UTree
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
 
 TREE_PATH = "save_regression_utree/"
 HOME_PATH = "/local-scratch/csv_oracle/"
+Q_PATH = "save_q/"
 
 
 def read_actions(game_directory, game_dir):
@@ -79,7 +86,7 @@ class CUTreeAgent:
     if check_fringe:
       self.utree.testFringe(check_linear)  # ks test is performed here
   
-  def getQ(self, currentObs):
+  def getQ(self, currentObs, action):
     """
     only insert instance to history
     :param currentObs:
@@ -89,9 +96,9 @@ class CUTreeAgent:
     :return:
     """
     t = self.utree.getTime()
-    i = C_UTree.Instance(t, currentObs, None, currentObs, None, None, None)
-    q_h, q_a = self.utree.getInstanceQvalues(i, None)
-    return [q_h, q_a]
+    i = C_UTree.Instance(t, currentObs, action, currentObs, None, None, None)
+    q_h, q_a, q_oh, q_oa = self.utree.getInstanceQvalues(i, None)
+    return [q_h, q_a], [q_oh, q_oa]
   
   def executePolicy(self, epsilon=1e-1):
     return None
@@ -117,11 +124,16 @@ class CUTreeAgent:
     game_dir_all = os.listdir(game_directory)
     
     count = 0
+    inscount = 0
+    Qlist = []
+    MAElist = [str(checkpoint), "MAE"]
+    Corlist = [str(checkpoint), "Cor"]
+    MSElist = [str(checkpoint), "MSE"]
     
-    checkpoint = 0
+    checkpoint = 24
     if checkpoint > 0:
-      self.utree = pickle.load(open(TREE_PATH + "Game_File_" + str(checkpoint) + '.p', 'rb'))
-      # self.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(checkpoint) + ".csv")
+      # self.utree = pickle.load(open(TREE_PATH + "Game_File_" + str(checkpoint) + '.p', 'rb'))
+      self.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(checkpoint))
     
     for game_dir in game_dir_all:
       
@@ -150,13 +162,14 @@ class CUTreeAgent:
         # home_identifier = int(calibrate_name_dict.get('home'))
         
         # Episodic means we are training, not episodic means we are extracting Q-values
+        game_info = game[index]
+        states = game_info[0]
+        action = game_info[1][1]
+        qValue = game_info[2]
+        currentObs = np.reshape(states, 14400)
+        nextObs = currentObs
+        
         if self.problem.isEpisodic:
-          game_info = game[index]
-          states = game_info[0]
-          action = game_info[1][1]
-          qValue = game_info[2]
-          currentObs = np.reshape(states, 14400)
-          nextObs = currentObs
           # actionlist = np.append(game[(index + 1) % event_number][1][1] == 1, actionlist[:3])
           
           if index == event_number - 1:
@@ -167,7 +180,6 @@ class CUTreeAgent:
           
           # This should only apply once to ensure no duplicate instances
           if count <= checkpoint:
-            break
             self.update(currentObs, nextObs, action, qValue, beginflag=beginflag)
           elif index % self.cff == self.cff - 1:  # check fringe, check fringe after cff iterations
             self.update(currentObs, nextObs, action, qValue, check_linear=1, check_fringe=1, beginflag=beginflag)
@@ -181,16 +193,39 @@ class CUTreeAgent:
           #   beginflag = False
         
         else:
-          currentObs = states[index]
-          # reward = rewards[index]
-          # self.getQ(currentObs, [], action, reward, home_identifier)
+          if random.randint(0, 100) % 50 == 0: # and actionlist[3] == 1:
+            q_reg, q_tree = self.getQ(currentObs, action)
+            if abs((max(q_reg) - max(qValue))) < abs((max(q_tree) - max(qValue))):
+              Qlist.append([max(q_reg), max(qValue)])
+            else:
+              Qlist.append([max(q_tree), max(qValue)])
+            inscount += 1
+            if inscount % 100 == 0:
+              print("Count:", inscount)
+              Q_trans = np.transpose(Qlist)
+              MAE = mean_absolute_error(Q_trans[0], Q_trans[1])
+              MSE = mean_squared_error(Q_trans[0], Q_trans[1])
+              Cor = np.corrcoef(Q_trans[0],Q_trans[1])
+              MAElist.append(MAE)
+              MSElist.append(MSE)
+              Corlist.append(Cor[0][1])
+              Qlist = []
+              if inscount == 500:
+                with open(Q_PATH + "regression" + ".csv", 'a', newline='') as csvfile:
+                  writer = csv.writer(csvfile)
+                  writer.writerow(MAElist)
+                  writer.writerow(MSElist)
+                  writer.writerow(Corlist)
+                exit(0)
+          else:
+            continue
       
       if self.problem.isEpisodic:
         if checkpoint < count:
           self.utree.print_tree()
-          pickle.dump(self.utree, open(TREE_PATH + "Game_File_" + str(count) + '.p', 'wb'))
+          # pickle.dump(self.utree, open(TREE_PATH + "Game_File_" + str(count) + '.p', 'wb'))
           # exit(0)
-          # self.utree.tocsvFile(TREE_PATH + "Game_File_" + str(count) + ".csv")
+          self.utree.tocsvFile(TREE_PATH + "Game_File_" + str(count))
           # self.utree.tocsvFile(HOME_PATH + "Game_File_" + str(count) + ".csv")
         # print out tree info
         print("Game File " + str(count))

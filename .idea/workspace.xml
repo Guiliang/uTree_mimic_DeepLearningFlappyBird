@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fe0b70d1-dc56-4491-a937-8291896e996e" name="Default" comment=":beer: fix bug in regression">
+    <list default="true" id="fe0b70d1-dc56-4491-a937-8291896e996e" name="Default" comment=":beer: fix bug in regression and mimic learning">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/game/wrapped_flappy_bird.py" afterPath="$PROJECT_DIR$/game/wrapped_flappy_bird.py" />
+      <change beforePath="$PROJECT_DIR$/check_save_transitions.py" afterPath="$PROJECT_DIR$/check_save_transitions.py" />
+      <change beforePath="$PROJECT_DIR$/deep_q_network.py" afterPath="$PROJECT_DIR$/deep_q_network.py" />
       <change beforePath="$PROJECT_DIR$/utree_training/Agent_oracle.py" afterPath="$PROJECT_DIR$/utree_training/Agent_oracle.py" />
       <change beforePath="$PROJECT_DIR$/utree_training/Agent_regression.py" afterPath="$PROJECT_DIR$/utree_training/Agent_regression.py" />
       <change beforePath="$PROJECT_DIR$/utree_training/C_UTree_oracle.py" afterPath="$PROJECT_DIR$/utree_training/C_UTree_oracle.py" />
       <change beforePath="$PROJECT_DIR$/utree_training/C_UTree_regression.py" afterPath="$PROJECT_DIR$/utree_training/C_UTree_regression.py" />
+      <change beforePath="$PROJECT_DIR$/utree_training/Problem_flappyBird.py" afterPath="$PROJECT_DIR$/utree_training/Problem_flappyBird.py" />
+      <change beforePath="$PROJECT_DIR$/utree_training/check_utree_result.py" afterPath="$PROJECT_DIR$/utree_training/check_utree_result.py" />
+      <change beforePath="$PROJECT_DIR$/utree_training/test.py" afterPath="$PROJECT_DIR$/utree_training/test.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,12 +22,12 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/DeepLearningFlappyBird$check_save_transitions.coverage" NAME="check_save_transitions Coverage Results" MODIFIED="1518918778588" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$deep_q_network.coverage" NAME="deep_q_network Coverage Results" MODIFIED="1520152235420" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$deep_q_network.coverage" NAME="deep_q_network Coverage Results" MODIFIED="1520225967283" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DeepLearningFlappyBird$deep_q_network.coverage" NAME="deep_q_network Coverage Results" MODIFIED="1518918200504" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DeepLearningFlappyBird$deep_q_network__1_.coverage" NAME="deep_q_network (1) Coverage Results" MODIFIED="1518916356467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$check_save_transitions.coverage" NAME="check_save_transitions Coverage Results" MODIFIED="1520146785530" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$test.coverage" NAME="test Coverage Results" MODIFIED="1520207699662" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$check_utree_result.coverage" NAME="check_utree_result Coverage Results" MODIFIED="1520134745157" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$check_save_transitions.coverage" NAME="check_save_transitions Coverage Results" MODIFIED="1520921352035" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$test.coverage" NAME="test Coverage Results" MODIFIED="1520921764851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$check_utree_result.coverage" NAME="check_utree_result Coverage Results" MODIFIED="1520909526885" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/uTree_mimic_DeepLearningFlappyBird$py_test_in_uTree_mimic_DeepLearningFlappyBird.coverage" NAME="py.test in uTree_mimic_DeepLearningFlappyBird Coverage Results" MODIFIED="1519370179003" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -34,9 +38,11 @@
       <file leaf-file-name="test.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utree_training/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="28">
-              <caret line="1" column="63" lean-forward="false" selection-start-line="1" selection-start-column="63" selection-end-line="1" selection-end-column="63" />
-              <folding />
+            <state relative-caret-position="252">
+              <caret line="9" column="83" lean-forward="true" selection-start-line="9" selection-start-column="83" selection-end-line="9" selection-end-column="83" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -44,8 +50,8 @@
       <file leaf-file-name="Agent_regression.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utree_training/Agent_regression.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1665">
-              <caret line="179" column="17" lean-forward="false" selection-start-line="179" selection-start-column="17" selection-end-line="179" selection-end-column="17" />
+            <state relative-caret-position="303">
+              <caret line="214" column="46" lean-forward="true" selection-start-line="214" selection-start-column="46" selection-end-line="214" selection-end-column="46" />
               <folding>
                 <element signature="e#56#74#0" expanded="true" />
               </folding>
@@ -53,41 +59,28 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="C_UTree_regression.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Problem_flappyBird.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/utree_training/Problem_flappyBird.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="321">
+              <caret line="50" column="52" lean-forward="true" selection-start-line="50" selection-start-column="52" selection-end-line="50" selection-end-column="52" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="C_UTree_regression.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utree_training/C_UTree_regression.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-18">
-              <caret line="292" column="58" lean-forward="false" selection-start-line="292" selection-start-column="58" selection-end-line="292" selection-end-column="58" />
+            <state relative-caret-position="336">
+              <caret line="12" column="29" lean-forward="true" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
               <folding>
-                <element signature="e#56#69#0" expanded="true" />
-                <element signature="e#13324#13882#0" expanded="false" />
-                <element signature="e#13937#14343#0" expanded="false" />
-                <element signature="e#22731#25500#0" expanded="false" />
-                <element signature="e#25539#27702#0" expanded="false" />
-                <element signature="e#27745#28478#0" expanded="false" />
+                <element signature="e#13310#13868#0" expanded="false" />
+                <element signature="e#13923#14329#0" expanded="false" />
+                <element signature="e#22721#25490#0" expanded="false" />
+                <element signature="e#25529#27692#0" expanded="false" />
+                <element signature="e#27735#28468#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LinearRegression.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utree_training/LinearRegression.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="13">
-              <caret line="135" column="37" lean-forward="false" selection-start-line="135" selection-start-column="37" selection-end-line="136" selection-end-column="43" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="check_utree_result.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utree_training/check_utree_result.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-295">
-              <caret line="38" column="11" lean-forward="false" selection-start-line="38" selection-start-column="11" selection-end-line="38" selection-end-column="11" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -150,17 +143,17 @@
         <option value="$PROJECT_DIR$/C_UTree_oracle.py" />
         <option value="$PROJECT_DIR$/Agent_oracle.py" />
         <option value="$PROJECT_DIR$/game/wrapped_flappy_bird.py" />
-        <option value="$PROJECT_DIR$/utree_training/check_utree_result.py" />
-        <option value="$PROJECT_DIR$/check_save_transitions.py" />
-        <option value="$PROJECT_DIR$/utree_training/test.py" />
         <option value="$PROJECT_DIR$/deep_q_network.py" />
         <option value="$PROJECT_DIR$/deep_q_network.py" />
-        <option value="$PROJECT_DIR$/utree_training/Problem_flappyBird.py" />
         <option value="$PROJECT_DIR$/utree_training/LinearRegression.py" />
-        <option value="$PROJECT_DIR$/utree_training/Agent_regression.py" />
-        <option value="$PROJECT_DIR$/utree_training/C_UTree_regression.py" />
-        <option value="$PROJECT_DIR$/utree_training/Agent_oracle.py" />
+        <option value="$PROJECT_DIR$/utree_training/check_utree_result.py" />
         <option value="$PROJECT_DIR$/utree_training/C_UTree_oracle.py" />
+        <option value="$PROJECT_DIR$/check_save_transitions.py" />
+        <option value="$PROJECT_DIR$/utree_training/Agent_oracle.py" />
+        <option value="$PROJECT_DIR$/utree_training/test.py" />
+        <option value="$PROJECT_DIR$/utree_training/C_UTree_regression.py" />
+        <option value="$PROJECT_DIR$/utree_training/Agent_regression.py" />
+        <option value="$PROJECT_DIR$/utree_training/Problem_flappyBird.py" />
       </list>
     </option>
   </component>
@@ -190,7 +183,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope">
         <subPane subId="Changed Files">
           <expand>
@@ -220,22 +212,13 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="uTree_mimic_DeepLearningFlappyBird" type="b2602c69:ProjectViewProjectNode" />
               <item name="uTree_mimic_DeepLearningFlappyBird" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="uTree_mimic_DeepLearningFlappyBird" type="b2602c69:ProjectViewProjectNode" />
-              <item name="uTree_mimic_DeepLearningFlappyBird" type="462c0819:PsiDirectoryNode" />
-              <item name="save_regression_utree" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="uTree_mimic_DeepLearningFlappyBird" type="b2602c69:ProjectViewProjectNode" />
-              <item name="uTree_mimic_DeepLearningFlappyBird" type="462c0819:PsiDirectoryNode" />
-              <item name="utree_training" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -251,12 +234,12 @@
     <property name="add_unversioned_files" value="$PROJECT_DIR$/deep_q_network.py&#10;D:/Solution code/python/uTree_mimic_DeepLearningFlappyBird/game/wrapped_flappy_bird.py" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Solution code\python\uTree_mimic_DeepLearningFlappyBird\utree" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Solution code\python\uTree_mimic_DeepLearningFlappyBird\utree_training" />
       <recent name="D:\Solution code\python\uTree_mimic_DeepLearningFlappyBird" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\Solution code\python\uTree_mimic_DeepLearningFlappyBird\utree" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -369,7 +352,7 @@
       <module name="uTree_mimic_DeepLearningFlappyBird" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utree_training/check_utree_result.py" />
-      <option name="PARAMETERS" value="76" />
+      <option name="PARAMETERS" value="63" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -388,7 +371,7 @@
       <module name="uTree_mimic_DeepLearningFlappyBird" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/deep_q_network.py" />
-      <option name="PARAMETERS" value="0" />
+      <option name="PARAMETERS" value="100" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -406,8 +389,8 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="uTree_mimic_DeepLearningFlappyBird" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="D:\Solution code\python\uTree_mimic_DeepLearningFlappyBird\utree_training\test.py" />
-      <option name="PARAMETERS" value="0" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utree_training/test.py" />
+      <option name="PARAMETERS" value="63" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -632,7 +615,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520160670928</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary=":beer: fix bug in regression and mimic learning">
+      <created>1520209942284</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1520209942284</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -651,22 +641,23 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.50625" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.373822" sideWeight="0.49375" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3497382" sideWeight="0.49375" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15602094" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1453125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.375" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34136125" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34136125" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Concurrent Activities Diagram" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -705,27 +696,11 @@
     <MESSAGE value=":beer: split q-values" />
     <MESSAGE value=":sparkles: solve a fatal problem in training (action backtrack)." />
     <MESSAGE value=":shit: Bad result, decide to use regression now, python3 friendly" />
-    <option name="LAST_COMMIT_MESSAGE" value=":shit: Bad result, decide to use regression now, python3 friendly" />
+    <MESSAGE value=":beer: fix bug in regression and mimic learning" />
+    <option name="LAST_COMMIT_MESSAGE" value=":beer: fix bug in regression and mimic learning" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/utree_training/check_utree_result.py</url>
-          <line>32</line>
-          <option name="timeStamp" value="105" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/check_save_transitions.py</url>
-          <line>15</line>
-          <option name="timeStamp" value="115" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/utree_training/Agent_regression.py</url>
-          <line>172</line>
-          <option name="timeStamp" value="133" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -733,29 +708,45 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="134" />
+      <option name="time" value="203" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="game_info[1][1]" language="Python" />
         <watch expression="next_state" />
-        <watch expression="np.shape(states)" language="Python" />
-        <watch expression="checkpoint" />
-        <watch expression="checkpoint" />
-        <watch expression="self.utree.nodes[8]" />
-        <watch expression="self.utree.nodes[9]" />
-        <watch expression="self.utree.nodes[7]" />
-        <watch expression="self.utree.nodes[4]" />
-        <watch expression="self.history[609].currentObs[624]" language="Python" />
-        <watch expression="self.nodes" />
-        <watch expression="__py_debug_temp_var_159797513" />
-        <watch expression="__py_debug_temp_var_159797513" />
-        <watch expression="__py_debug_temp_var_159797513" />
+        <watch expression="self.node_id_count" language="Python" />
+        <watch expression="sum([(True if i == 220 else False) for i in fig])" language="Python" />
+        <watch expression="sum([(True if i == 40 else False) for i in fig])" language="Python" />
+        <watch expression="idx" />
       </configuration>
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
+      <expression>
+        <expression-string>sum([(True if i == 40 else False) for i in fig])</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>sum([(True if i == 220 else False) for i in fig])</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.node_id_count</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>np.max(game_info[2])</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>temp[0]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>self.history[609].currentObs[624]</expression-string>
         <language-id>Python</language-id>
@@ -781,39 +772,9 @@
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>self.history[103].currentObs[624]</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>self.history[300].currentObs[624]</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>self.history[289].currentObs[624]</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>self.history[599].currentObs[624]</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>self.history[600].currentObs[624]</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/images/preprocess.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/images/network.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -854,7 +815,6 @@
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="192">
             <caret line="10" column="9" lean-forward="false" selection-start-line="10" selection-start-column="9" selection-end-line="10" selection-end-column="9" />
-            <folding />
           </first_editor>
           <second_editor />
         </state>
@@ -864,7 +824,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="9" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -872,7 +831,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -880,7 +838,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="235">
           <caret line="748" column="0" lean-forward="false" selection-start-line="748" selection-start-column="0" selection-end-line="748" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -888,81 +845,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="327">
           <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#13#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_300.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_400.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-317">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_500.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5190">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_700.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_1000.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-9752">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_2000.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-8400">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_7300.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-13620">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_10000.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_300.csv" />
+    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_400.csv" />
+    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_500.csv" />
+    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_700.csv" />
+    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_1000.csv" />
+    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_2000.csv" />
+    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_7300.csv" />
+    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_10000.csv" />
     <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python36/site-packages/google/protobuf/internal/python_message.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="213">
           <caret line="651" column="0" lean-forward="false" selection-start-line="651" selection-start-column="0" selection-end-line="651" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -978,7 +875,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
           <caret line="1559" column="0" lean-forward="false" selection-start-line="1559" selection-start-column="0" selection-end-line="1559" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -986,7 +882,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1002,7 +897,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="112">
           <caret line="4" column="12" lean-forward="false" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1010,7 +904,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-801">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1018,23 +911,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="182">
           <caret line="2167" column="0" lean-forward="false" selection-start-line="2167" selection-start-column="0" selection-end-line="2167" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="7" column="10" lean-forward="true" selection-start-line="7" selection-start-column="10" selection-end-line="7" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="308" column="0" lean-forward="false" selection-start-line="308" selection-start-column="0" selection-end-line="308" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1042,7 +918,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3795">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1066,7 +941,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-6093">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1074,33 +948,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-5869">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_100.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-29277">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="1667" column="0" lean-forward="false" selection-start-line="1667" selection-start-column="0" selection-end-line="1667" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/save_utree/Game_File_100.csv" />
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/cv2/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#16#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1108,7 +963,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1120,107 +974,130 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/deep_q_network.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="162" column="17" lean-forward="false" selection-start-line="162" selection-start-column="17" selection-end-line="162" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utree_training/Problem_flappyBird.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="47" column="24" lean-forward="false" selection-start-line="47" selection-start-column="24" selection-end-line="47" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/save_regression_utree/Game_File_1.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="4" column="6" lean-forward="true" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utree_training/LinearRegression.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="43" column="19" lean-forward="false" selection-start-line="43" selection-start-column="19" selection-end-line="43" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="386">
+          <caret line="1667" column="0" lean-forward="false" selection-start-line="1667" selection-start-column="0" selection-end-line="1667" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="308" column="0" lean-forward="false" selection-start-line="308" selection-start-column="0" selection-end-line="308" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deep_q_network.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="149" column="0" lean-forward="true" selection-start-line="149" selection-start-column="0" selection-end-line="149" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fig1.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utree_training/C_UTree_oracle.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="233" column="0" lean-forward="false" selection-start-line="233" selection-start-column="0" selection-end-line="233" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/utree_training/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="1" column="63" lean-forward="false" selection-start-line="1" selection-start-column="63" selection-end-line="1" selection-end-column="63" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/check_save_transitions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="10" column="20" lean-forward="false" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utree_training/LinearRegression.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13">
-          <caret line="135" column="37" lean-forward="false" selection-start-line="135" selection-start-column="37" selection-end-line="136" selection-end-column="43" />
+        <state relative-caret-position="252">
+          <caret line="9" column="83" lean-forward="true" selection-start-line="9" selection-start-column="83" selection-end-line="9" selection-end-column="83" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/utree_training/check_utree_result.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-295">
-          <caret line="38" column="11" lean-forward="false" selection-start-line="38" selection-start-column="11" selection-end-line="38" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utree_training/Agent_regression.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1665">
-          <caret line="179" column="17" lean-forward="false" selection-start-line="179" selection-start-column="17" selection-end-line="179" selection-end-column="17" />
+        <state relative-caret-position="1245">
+          <caret line="73" column="0" lean-forward="false" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
           <folding>
-            <element signature="e#56#74#0" expanded="true" />
+            <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/utree_training/Agent_oracle.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="133" column="23" lean-forward="false" selection-start-line="133" selection-start-column="23" selection-end-line="133" selection-end-column="23" />
+        <state relative-caret-position="280">
+          <caret line="10" column="29" lean-forward="false" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utree_training/C_UTree_oracle.py">
+    <entry file="file://$PROJECT_DIR$/check_save_transitions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="616">
-          <caret line="244" column="2" lean-forward="true" selection-start-line="244" selection-start-column="2" selection-end-line="244" selection-end-column="2" />
-          <folding>
-            <element signature="e#20789#23558#0" expanded="false" />
-            <element signature="e#25803#26536#0" expanded="false" />
-            <element signature="e#26542#26576#0" expanded="false" />
-            <element signature="e#29656#29704#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="400">
+          <caret line="30" column="26" lean-forward="false" selection-start-line="30" selection-start-column="26" selection-end-line="30" selection-end-column="26" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/utree_training/C_UTree_regression.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-18">
-          <caret line="292" column="58" lean-forward="false" selection-start-line="292" selection-start-column="58" selection-end-line="292" selection-end-column="58" />
+        <state relative-caret-position="336">
+          <caret line="12" column="29" lean-forward="true" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
           <folding>
-            <element signature="e#56#69#0" expanded="true" />
-            <element signature="e#13324#13882#0" expanded="false" />
-            <element signature="e#13937#14343#0" expanded="false" />
-            <element signature="e#22731#25500#0" expanded="false" />
-            <element signature="e#25539#27702#0" expanded="false" />
-            <element signature="e#27745#28478#0" expanded="false" />
+            <element signature="e#13310#13868#0" expanded="false" />
+            <element signature="e#13923#14329#0" expanded="false" />
+            <element signature="e#22721#25490#0" expanded="false" />
+            <element signature="e#25529#27692#0" expanded="false" />
+            <element signature="e#27735#28468#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utree_training/Agent_regression.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="214" column="46" lean-forward="true" selection-start-line="214" selection-start-column="46" selection-end-line="214" selection-end-column="46" />
+          <folding>
+            <element signature="e#56#74#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utree_training/Problem_flappyBird.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="50" column="52" lean-forward="true" selection-start-line="50" selection-start-column="52" selection-end-line="50" selection-end-column="52" />
+          <folding />
         </state>
       </provider>
     </entry>

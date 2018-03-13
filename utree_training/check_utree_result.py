@@ -1,7 +1,10 @@
 import cv2
 import sys
 
+from scipy import ndimage
+
 from utree_training import Problem_flappyBird, Agent_oracle as Agent
+# from utree_training import Problem_flappyBird, Agent_regression as Agent
 import game.wrapped_flappy_bird as game
 import numpy as np
 import pickle
@@ -11,7 +14,7 @@ from utree_training.test import opts
 ACTIONS = 2  # number of valid actions
 FRAME_PER_ACTION = 1
 TREE_PATH = "save_utree/"
-
+# TREE_PATH = "save_regression_utree/"
 
 def playGame(agent):
   # open up a game state to communicate with emulator
@@ -29,7 +32,12 @@ def playGame(agent):
   t = 0
   while "flappy bird" != "angry bird":
     # choose an action epsilon greedily
-    currentObs = np.insert(np.reshape(list(s_t[:, :, 0]), 6400), 6400, a_list[:3])
+    temp = np.zeros((4, 45, 80))
+    for i in range(4):
+      temp[i] = ndimage.rotate(s_t[:, :, i], 270)[:][10:55]
+    # currentObs = np.insert(np.reshape(list(s_t[:, :, 0]), 6400), 6400, a_list[:3])
+    # currentObs = np.reshape(temp, 14400)
+    currentObs = np.insert(np.reshape(temp, 14400), 14400, a_list[:3])
     a_t = agent.utree.getBestAction(currentObs)
     a_list = np.append(a_t[1], a_list[:3])
     print("Action:", a_t)
@@ -59,5 +67,7 @@ if __name__ == "__main__":
   CUTreeAgent = Agent.CUTreeAgent(problem=ice_hockey_problem, max_hist=opts.MAX_NODE_HIST,
                                   check_fringe_freq=opts.CHECK_FRINGE_FREQ, is_episodic=0)
   # CUTreeAgent.utree.fromcsvFile(TREE_PATH + "Game_File_" + sys.argv[1] + ".csv")
-  CUTreeAgent.utree = pickle.load(open(TREE_PATH + "Game_File_" + sys.argv[1] + '.p', mode='rb'))
+  CUTreeAgent.episode(int(sys.argv[1]))
+  # CUTreeAgent.utree.fromcsvFile(TREE_PATH + "Game_File_" + sys.argv[1])
+  # CUTreeAgent.utree = pickle.load(open(TREE_PATH + "Game_File_" + sys.argv[1] + '.p', mode='rb'))
   playGame(CUTreeAgent)

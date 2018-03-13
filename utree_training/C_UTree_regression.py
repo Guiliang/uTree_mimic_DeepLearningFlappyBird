@@ -6,8 +6,10 @@ import numpy as np
 import optparse
 import sys
 import csv
+import pickle
 import tensorflow as tf
-from utree_training import LinearRegression as lr
+# from utree_training import LinearRegression as lr
+import LinearRegression as lr
 from scipy.stats import ks_2samp
 
 NodeSplit = 0
@@ -19,6 +21,7 @@ AWAY = 1
 MAX_DEPTH = 40
 MIN_LINEAR = 10
 TRIES = 2
+
 
 class CUTree:
   def __init__(self, gamma, n_actions, dim_sizes, dim_names, max_hist, max_back_depth=1, minSplitInstances=10,
@@ -62,28 +65,15 @@ class CUTree:
   #   return bestInst.action
   
   def getBestAction(self, currentObs):
-    maxCorr = 100000
     t = self.getTime()
-    # action 0
     i = Instance(t, currentObs, 0, currentObs, None, None, None)
-    self.insertInstance(i)
-    next_state = self.getInstanceLeaf(i)
-    for inst in next_state.instances:
-      sub = (currentObs - inst.currentObs) % 254
-      diff = np.sum(sub[:14400])
-      if maxCorr > diff:
-        maxCorr = diff
-    self.popInstance()
-    # action 1
-    i = Instance(t, currentObs, 1, currentObs, None, None, None)
-    self.insertInstance(i)
-    next_state = self.getInstanceLeaf(i)
-    for inst in next_state.instances:
-      sub = (currentObs - inst.currentObs) % 254
-      diff = np.sum(sub[:14400]) + np.sum(sub[14400:]) * 6400
-      if maxCorr > diff:
-        return [0, 1]
-    return [1, 0]
+    q_h, q_a, q_oh, q_oa = self.getInstanceQvalues(i, None)
+    if q_a > q_h and q_a > 0 and q_h > 0:
+      return [0, 1]
+    elif q_oa > q_oh:
+      return [0, 1]
+    else:
+      return [1, 0]
   
   def tocsvFile(self, filename):
     '''
@@ -91,10 +81,11 @@ class CUTree:
     :param filename: the path of file to store the record
     :return:
     '''
-    with open(filename, 'w', newline='') as csvfile:
+    with open(filename + ".csv", 'w', newline='') as csvfile:
       fieldname = ['idx', 'dis', 'dis_value', 'par', 'q_act0', 'q_act1', 'linear']
       writer = csv.writer(csvfile)
       writer.writerow(fieldname)
+      f_list = []
       for i, node in self.nodes.items():
         if node.nodeType == NodeSplit:
           writer.writerow([node.idx,
@@ -102,18 +93,16 @@ class CUTree:
                            node.distinction.continuous_divide_value if node.distinction.continuous_divide_value else None,
                            node.parent.idx if node.parent else None,
                            None,
-                           None,
-                           node.f_linear])
+                           None])
         else:
           writer.writerow([node.idx,
                            None,
                            None,
                            node.parent.idx if node.parent else None,
                            node.qValues_home,
-                           node.qValues_away,
-                           node.f_linear])
-          # node.qValues_home,
-          # node.qValues_away])
+                           node.qValues_away])
+        f_list.append(node.f_linear)
+    pickle.dump(f_list, open(filename + '_linear.p', 'wb'))
   
   def fromcsvFile(self, filename):
     '''
@@ -121,7 +110,8 @@ class CUTree:
     :param filename: the path of file to load record
     :return:
     '''
-    with open(filename, 'r') as csvfile:
+    f_list = pickle.load(open(filename + '_linear.p', 'rb'))
+    with open(filename + ".csv", 'r') as csvfile:
       fieldname = ['idx', 'dis', 'dis_value', 'par', 'q_act0', 'q_act1', 'linear']
       reader = csv.reader(csvfile)
       self.node_id_count = 0
@@ -145,15 +135,16 @@ class CUTree:
           # node.qValues = float(record[4])
           node.qValues_home = float(record[4])
           node.qValues_away = float(record[5])
-        if len(record) > 6 and record[6]:
-          node.f_linear = np.array(list(map(float, record[6].replace('[', '').replace(']', '').split())))
-          node.f_linear = np.resize(node.f_linear, (2, self.n_dim + 1))
+        # if len(record) > 6 and record[6]:
+        node.f_linear = f_list[self.node_id_count]
         if node.parent:
           self.nodes[int(record[3])].children.append(node)
         if node.idx == 1:
           self.root = node
         elif node.idx == 2:
           self.term = node
+        elif node.idx == 3:
+          self.start = node
         self.nodes[int(node.idx)] = node
         self.node_id_count += 1
   
@@ -196,22 +187,30 @@ class CUTree:
     self.insertInstance(instance)
     # set goal's q_value as equal to previous shot
     next_state = self.getInstanceLeaf(instance)
-    return next_state.utility(home_identifier=True), \
-           next_state.utility(home_identifier=False)
-
+    if next_state.f_linear is not None:
+      return self.LinearEval(instance, next_state.f_linear[0]), \
+             self.LinearEval(instance, next_state.f_linear[1]), \
+             next_state.utility(home_identifier=True), \
+             next_state.utility(home_identifier=False)
+    else:
+      return next_state.utility(home_identifier=True), \
+             next_state.utility(home_identifier=False), \
+             next_state.utility(home_identifier=True), \
+             next_state.utility(home_identifier=False)
+  
   def LinearEval(self, instance, f):
     q = f[self.n_dim]
     for i in range(0, self.n_dim):
       q += instance.currentObs[i] * f[i]
     return q
-
+  
   def testLinear(self):
     """
     Serve as a public function call testLinearRecursive
     :return:
     """
     return self.testLinearRecursive(self.root)
-
+  
   def testLinearRecursive(self, node):
     """
     Check each node whether leaf or not
@@ -227,7 +226,7 @@ class CUTree:
     for c in node.children:
       self.testLinearRecursive(c)
     return
-
+  
   def getLinearFactors(self, node):
     """
     get linear factor for Q_h and Q_a, set node.f_linear=[[Q_h factors], [Q_a factors]]
@@ -236,7 +235,7 @@ class CUTree:
     """
     train_X = [instance.currentObs for instance in node.instances]
     train_Y = [instance.qValue for instance in node.instances]
-    l_rate = 0.0001
+    l_rate = 0.00001
     n_epochs = 1000
     count = 0
     max_diff = 10000
@@ -270,7 +269,7 @@ class CUTree:
       count += 1
     node.f_linear = np.concatenate((np.transpose(W), np.transpose(b)), axis=1)
     print("finish linear, node: " + str(node.idx))
-
+  
   def getTime(self):
     """
     :return: length of history
@@ -545,7 +544,7 @@ class CUTree:
         n.modified = False
       else:
         n.f_linear = node.f_linear
-
+    
     node.instances = []
     # update Q-values for children
     # for n in node.children:
@@ -958,7 +957,7 @@ class UNode:
     
     self.distinction = None
     self.instances = []
-
+    
     # linear regression model
     self.f_linear = None
     

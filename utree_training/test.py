@@ -1,5 +1,8 @@
 import optparse
-from utree_training import Problem_flappyBird, Agent_regression as Agent
+# from utree_training import Problem_flappyBird, Agent_oracle as Agent
+# from utree_training import Problem_flappyBird, Agent_regression as Agent
+# import Problem_flappyBird, Agent_oracle as Agent
+import Problem_flappyBird, Agent_regression as Agent
 import sys
 
 optparser = optparse.OptionParser()
