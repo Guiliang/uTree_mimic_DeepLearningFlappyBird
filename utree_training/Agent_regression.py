@@ -130,7 +130,7 @@ class CUTreeAgent:
     Corlist = [str(checkpoint), "Cor"]
     MSElist = [str(checkpoint), "MSE"]
     
-    checkpoint = 24
+    # checkpoint = 24
     if checkpoint > 0:
       # self.utree = pickle.load(open(TREE_PATH + "Game_File_" + str(checkpoint) + '.p', 'rb'))
       self.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(checkpoint))
@@ -193,7 +193,7 @@ class CUTreeAgent:
           #   beginflag = False
         
         else:
-          if random.randint(0, 100) % 50 == 0: # and actionlist[3] == 1:
+          if random.randint(0, 100) % 5 == 0 and count > 60:
             q_reg, q_tree = self.getQ(currentObs, action)
             if abs((max(q_reg) - max(qValue))) < abs((max(q_tree) - max(qValue))):
               Qlist.append([max(q_reg), max(qValue)])
@@ -226,6 +226,7 @@ class CUTreeAgent:
           # pickle.dump(self.utree, open(TREE_PATH + "Game_File_" + str(count) + '.p', 'wb'))
           # exit(0)
           self.utree.tocsvFile(TREE_PATH + "Game_File_" + str(count))
+          exit(0)
           # self.utree.tocsvFile(HOME_PATH + "Game_File_" + str(count) + ".csv")
         # print out tree info
         print("Game File " + str(count))

@@ -43,10 +43,10 @@ class flappyBird:
     self.gamma = gamma
     
     self.reset = None
-    # self.isEpisodic = True
-    self.isEpisodic = False
-    # self.nStates = 14403  # 3 previous actions
-    self.nStates = 14400
+    self.isEpisodic = True
+    # self.isEpisodic = False
+    self.nStates = 14403  # 3 previous actions
+    # self.nStates = 14400
     self.dimNames = ['point' + str(i) for i in range(self.nStates)]
     self.dimSizes = [2 for i in range(self.nStates)]
     
@@ -57,6 +57,7 @@ class flappyBird:
                                                     "Action Feature States" if self.actions else "Feature States")
     
     # self.games_directory = '/mnt/d/Solution code/data/'
+    # self.games_directory = "D:\\Solution code\\python\\uTree_mimic_DeepLearningFlappyBird\\test_transitions\\"
     self.games_directory = 'D:\\Solution code\\python\\uTree_mimic_DeepLearningFlappyBird\\save_all_transitions\\'  # test on my windows computer
     # self.games_directory = '/home/bill/data/'  # test on my ubuntu VM
     # self.games_directory = '/cs/oschulte/Galen/Hockey-data-entire/State-Hockey-Training-All-feature5-scale-neg_reward_v_correct_/'

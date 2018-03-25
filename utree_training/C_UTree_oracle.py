@@ -22,7 +22,7 @@ HIGH_COLOR = 220
 
 class CUTree:
   def __init__(self, gamma, n_actions, dim_sizes, dim_names, max_hist, max_back_depth=1, minSplitInstances=10,
-               significance_level=0.0005, is_episodic=0):
+               significance_level=0.01, is_episodic=0):
     
     self.node_id_count = 0
     self.root = UNode(self.genId(), NodeLeaf, None, n_actions, 1)
@@ -780,6 +780,10 @@ class CUTree:
     :return:
     """
     assert node.nodeType == NodeLeaf
+    diff_significanceLevel = self.significanceLevel
+    if diff_significanceLevel < 0.0001:
+      diff_significanceLevel = 0.0001
+    print("Sig:"+str(diff_significanceLevel))
     root_utils = self.getQs(node)
     variance = np.var(root_utils)
     # root_utils_home, root_utils_away = self.getQs(node)

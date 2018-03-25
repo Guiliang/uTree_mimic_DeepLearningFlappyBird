@@ -20,7 +20,7 @@ HOME = 0
 AWAY = 1
 MAX_DEPTH = 40
 MIN_LINEAR = 10
-TRIES = 2
+TRIES = 3
 
 
 class CUTree:
@@ -235,7 +235,7 @@ class CUTree:
     """
     train_X = [instance.currentObs for instance in node.instances]
     train_Y = [instance.qValue for instance in node.instances]
-    l_rate = 0.00001
+    l_rate = 0.0001
     n_epochs = 1000
     count = 0
     max_diff = 10000

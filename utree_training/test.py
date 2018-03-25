@@ -1,14 +1,14 @@
 import optparse
-# from utree_training import Problem_flappyBird, Agent_oracle as Agent
+from utree_training import Problem_flappyBird, Agent_oracle as Agent
 # from utree_training import Problem_flappyBird, Agent_regression as Agent
 # import Problem_flappyBird, Agent_oracle as Agent
-import Problem_flappyBird, Agent_regression as Agent
+# import Problem_flappyBird, Agent_regression as Agent
 import sys
 
 optparser = optparse.OptionParser()
 optparser.add_option("-m", "--max_node_hist", dest="MAX_NODE_HIST", default=3000,
                      help="max number of instance in every node (default = 10000)")
-optparser.add_option("-c", "--check_fringe_freq", dest="CHECK_FRINGE_FREQ", default=200,
+optparser.add_option("-c", "--check_fringe_freq", dest="CHECK_FRINGE_FREQ", default=300,
                      help="check fringe frequent (default = 100)")
 optparser.add_option("-d", "--directory_of_games", dest="GAME_DIRECTORY", default="",
                      help="games dir of all the games")

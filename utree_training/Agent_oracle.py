@@ -7,15 +7,15 @@ import pickle
 import inspect
 import random
 import csv
-# from utree_training import C_UTree_oracle as C_UTree
-import C_UTree_oracle as C_UTree
+from utree_training import C_UTree_oracle as C_UTree
+# import C_UTree_oracle as C_UTree
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error
 
 TREE_PATH = "save_utree/"
 HOME_PATH = "/local-scratch/csv_oracle/"
 Q_PATH = "save_q/"
-
+RDEC = 1.1
 
 def read_actions(game_directory, game_dir):
   actions = sio.loadmat(game_directory + game_dir + "/action_{0}.mat".format(game_dir))
@@ -130,8 +130,10 @@ class CUTreeAgent:
     Qlist = []
     MAElist = [str(checkpoint), "MAE"]
     Corlist = [str(checkpoint), "Cor"]
-    MSElist = [str(checkpoint), "MSE"]
-    # checkpoint = 45
+    RMSElist = [str(checkpoint), "RMSE"]
+    RAElist = [str(checkpoint), "RAE"]
+    RRSElist = [str(checkpoint), "RRSE"]
+    # checkpoint = 26
     if checkpoint > 0:
       self.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(checkpoint) + ".csv")
     
@@ -150,6 +152,9 @@ class CUTreeAgent:
       beginflag = False
       count += 1
       
+      # if count < 30:
+      #   continue
+        
       for index in range(0, event_number):
         # action = self.problem.actions[
         # unicodedata.normalize('NFKD', actions[index]).encode('ascii', 'ignore').strip()]
@@ -194,37 +199,60 @@ class CUTreeAgent:
           #   beginflag = False
         
         else:
-          if random.randint(0, 100) % 50 == 0: # and actionlist[3] == 1:
-            q_tree = self.getQ(currentObs, action)
-            Qlist.append([q_tree, qValue])
-            inscount += 1
-            if inscount % 100 == 0:
-              print("Count:", inscount)
-              Q_trans = np.transpose(Qlist)
-              MAE = mean_absolute_error(Q_trans[0], Q_trans[1])
-              MSE = mean_squared_error(Q_trans[0], Q_trans[1])
-              Cor = np.corrcoef(Q_trans[0],Q_trans[1])
-              MAElist.append(MAE)
-              MSElist.append(MSE)
-              Corlist.append(Cor[0][1])
-              Qlist = []
-              if inscount == 500:
-                with open(Q_PATH + "mimic" + ".csv", 'a', newline='') as csvfile:
-                  writer = csv.writer(csvfile)
-                  writer.writerow(MAElist)
-                  writer.writerow(MSElist)
-                  writer.writerow(Corlist)
-                exit(0)
-            # point_fig = self.getFig(currentObs, action)
-            # pickle.dump(point_fig, open(Q_PATH + "fig.p", 'wb'))
-            # exit(0)
+          if count > 0 and random.randint(0, 100) % 50 == 0: # and actionlist[3] == 1:
+            # q_tree = self.getQ(currentObs, action)
+            # Qlist.append([q_tree, qValue])
+            # inscount += 1
+            # if inscount % 100 == 0:
+            #   print("Count:", inscount)
+            #   Q_trans = np.transpose(Qlist)
+            #   MAE = mean_absolute_error(Q_trans[0], Q_trans[1])
+            #   MSE = mean_squared_error(Q_trans[0], Q_trans[1])
+            #   RMSE = MSE ** 0.5
+            #   Cor = np.corrcoef(Q_trans[0],Q_trans[1])
+            #
+            #   target_origin_list = np.asarray(Q_trans[1])
+            #   ymean = sum(target_origin_list) / len(target_origin_list)
+            #   ymae = sum(abs(target_origin_list - ymean)) / len(target_origin_list)
+            #   ymse = sum((target_origin_list - ymean) ** 2) / len(target_origin_list)
+            #
+            #   RAE = MAE / ymae
+            #   RRSE = MSE / ymse
+            #
+            #   MAElist.append(MAE)
+            #   RMSElist.append(RMSE)
+            #   Corlist.append(Cor[0][1])
+            #   RAElist.append(RAE)
+            #   RRSElist.append(RRSE)
+            #   Qlist = []
+            #   if inscount == 500:
+            #     print('average coe:{0}, mae:{1}, rmse:{2}, rae:{3}, rrse:{4}, leaves:{5}'.
+            #           format(float(sum(Corlist[2:])) / len(Corlist[2:]),
+            #                  float(sum(MAElist[2:])) / len(MAElist[2:]),
+            #                  float(sum(RMSElist[2:])) / len(RMSElist[2:]),
+            #                  float(sum(RAElist[2:])) / len(RAElist[2:]),
+            #                  float(sum(RRSElist[2:])) / len(RRSElist[2:]),
+            #                  (self.utree.node_id_count - 1) / 2))
+            #     with open(Q_PATH + "mimic" + ".csv", 'a', newline='') as csvfile:
+            #       writer = csv.writer(csvfile)
+            #       writer.writerow(MAElist)
+            #       writer.writerow(RMSElist)
+            #       writer.writerow(Corlist)
+            #       writer.writerow(RAElist)
+            #       writer.writerow(RRSElist)
+            #     exit(0)
+            point_fig = self.getFig(currentObs, action)
+            pickle.dump(point_fig, open(Q_PATH + "fig.p", 'wb'))
+            exit(0)
           else:
             continue
+
+      self.utree.significanceLevel /= RDEC
       
       if self.problem.isEpisodic:
         if checkpoint <= count:
-          self.utree.print_tree()
           return
+          self.utree.print_tree()
           # pickle.dump(self.utree, open(TREE_PATH + "Game_File_" + str(count) + '.p', 'wb'))
           # exit(0)
           self.utree.tocsvFile(TREE_PATH + "Game_File_" + str(count) + ".csv")
