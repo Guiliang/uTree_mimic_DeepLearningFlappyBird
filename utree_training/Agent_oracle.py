@@ -7,6 +7,7 @@ import pickle
 import inspect
 import random
 import csv
+import seaborn as sns
 from utree_training import C_UTree_oracle as C_UTree
 # import C_UTree_oracle as C_UTree
 from sklearn.metrics import mean_squared_error
@@ -136,7 +137,7 @@ class CUTreeAgent:
     # checkpoint = 26
     if checkpoint > 0:
       self.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(checkpoint) + ".csv")
-      return
+      # return
     
     for game_dir in game_dir_all:
       
@@ -251,8 +252,10 @@ class CUTreeAgent:
       self.utree.significanceLevel /= RDEC
       
       if self.problem.isEpisodic:
-        if checkpoint < count:
-          # return
+        if checkpoint <= count:
+          influence = self.utree.getFeatureInfluence()
+          pickle.dump(influence, open(Q_PATH + "influence.p", 'wb'))
+          return
           self.utree.print_tree()
           # pickle.dump(self.utree, open(TREE_PATH + "Game_File_" + str(count) + '.p', 'wb'))
           # exit(0)

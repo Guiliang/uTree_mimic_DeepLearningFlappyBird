@@ -112,18 +112,18 @@ class CUTree:
           if check_d[i][54] == 0 and check_d[i][64] == 0 and check_d[i][59] == 355:
             if i + 10 >= 45 or i == 0:
               break
-            elif check_d[i+1][54] == 0 and check_d[i+1][64] == 0 and check_d[i+1][59] == 355 \
-                and check_d[i+2][54] == 0 and check_d[i+2][64] == 0 and check_d[i+2][59] == 355 \
-                and check_d[i+4][54] != 255 and check_d[i+3][52] != 255 and check_d[i+3][52] != 355:
+            elif check_d[i + 1][54] == 0 and check_d[i + 1][64] == 0 and check_d[i + 1][59] == 355 \
+                and check_d[i + 2][54] == 0 and check_d[i + 2][64] == 0 and check_d[i + 2][59] == 355 \
+                and check_d[i + 4][54] != 255 and check_d[i + 3][52] != 255 and check_d[i + 3][52] != 355:
               # flag = True
               diff += 1000
               break
           if check_d[i][54] == 100 and check_d[i][64] == 100 and check_d[i][59] == 255:
             if i + 3 >= 45 or i == 0:
               break
-            elif check_d[i+1][54] == 100 and check_d[i+1][64] == 100 and check_d[i+1][59] == 255 \
-                and check_d[i+2][54] == 100 and check_d[i+2][64] == 100 and check_d[i+2][59] == 255:
-                # and check_d[i+3][59] != 255 and check_d[i-1][59] != 255:
+            elif check_d[i + 1][54] == 100 and check_d[i + 1][64] == 100 and check_d[i + 1][59] == 255 \
+                and check_d[i + 2][54] == 100 and check_d[i + 2][64] == 100 and check_d[i + 2][59] == 255:
+              # and check_d[i+3][59] != 255 and check_d[i-1][59] != 255:
               # flag = True
               diff += 1000
               break
@@ -134,7 +134,7 @@ class CUTree:
           # self.popInstance()
           # return [0, 1]
         # else:
-          # flag = False
+        # flag = False
     self.popInstance()
     if maxCorr >= 1300:
       return [1, 0]
@@ -221,7 +221,7 @@ class CUTree:
           node.distinction = Distinction(dimension=int(record[1]),
                                          back_idx=0,
                                          dimension_name=self.dim_names[int(record[1])]
-                                         if int(record[1])>-1 else 'actions',
+                                         if int(record[1]) > -1 else 'actions',
                                          iscontinuous=True if record[2] else False,
                                          continuous_divide_value=float(record[2]) if record[
                                            2] else None)  # default back_idx is 0
@@ -271,6 +271,32 @@ class CUTree:
                    # node.qValues_away,
                    node.parent.idx if node.parent else None))
   
+  def getFeatureInfluence(self):
+    influence = np.zeros(14400)
+    for idx, node in self.nodes.items():
+      if node == self.start or node == self.term:
+        continue
+      if node.distinction is None:
+        continue
+      if node.distinction is not None:
+        if node.distinction.dimension < 0 or node.distinction.dimension >= 14400:
+          continue
+      varp = []
+      varc = []
+      for inst in node.instances:
+        varp.append(inst.qValue)
+      for nodec in node.children:
+        varc_temp = []
+        for inst in nodec.instances:
+          varc_temp.append(inst.qValue)
+        varc.append(varc_temp)
+      varp_value = np.var(varp)
+      varc_value = 0
+      for varc_temp in varc:
+        varc_value += np.var(varc_temp) * len(varc_temp) / len(varp)
+      influence[node.distinction.dimension] += varp_value - varc_value
+    return influence
+  
   def getInstanceQvalues(self, instance, reward):
     """
     get the Q-value from instance, q(I,a)
@@ -308,9 +334,11 @@ class CUTree:
     #     return
     self.insertInstance(instance)  # add the new instance to U-Tree history
     new_state = self.getLeaf()  # get the leaf of next state
-    new_state.addInstance(instance, self.max_hist)  # add the instance to leaf node
     if not beginflag:  # last instance is not goal and not the beginning of the game
       new_state.updateModel(None, None, None, None, instance.qValue)
+    while new_state != self.root and new_state != self.start:
+      new_state.addInstance(instance, self.max_hist)  # add the instance to leaf node
+      new_state = new_state.parent
     # if instance.nextObs[0] == -1:  # this instance lead to goal
     #   new_state.updateModel(None, None, None, None, instance.qValue)
   
@@ -840,7 +868,7 @@ class CUTree:
     diff_significanceLevel = self.significanceLevel
     if diff_significanceLevel < 0.0001:
       diff_significanceLevel = 0.0001
-    print("Sig:"+str(diff_significanceLevel))
+    print("Sig:" + str(diff_significanceLevel))
     root_utils = self.getQs(node)
     variance = np.var(root_utils)
     # root_utils_home, root_utils_away = self.getQs(node)
