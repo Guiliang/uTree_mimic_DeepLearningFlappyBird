@@ -59,5 +59,6 @@ class flappyBird:
     # self.games_directory = '/mnt/d/Solution code/data/'
     # self.games_directory = "D:\\Solution code\\python\\uTree_mimic_DeepLearningFlappyBird\\test_transitions\\"
     self.games_directory = 'D:\\Solution code\\python\\uTree_mimic_DeepLearningFlappyBird\\save_all_transitions\\'  # test on my windows computer
+    # self.games_directory = 'D:\\Solution code\\python\\uTree_mimic_DeepLearningFlappyBird\\save_reward_transitions\\'
     # self.games_directory = '/home/bill/data/'  # test on my ubuntu VM
     # self.games_directory = '/cs/oschulte/Galen/Hockey-data-entire/State-Hockey-Training-All-feature5-scale-neg_reward_v_correct_/'

@@ -7,15 +7,16 @@ import pickle
 import inspect
 import random
 import csv
-from utree_training import C_UTree_oracle as C_UTree
+from utree_training import C_UTree_CUT as C_UTree
 # import C_UTree_oracle as C_UTree
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error
 
-TREE_PATH = "save_utree_7_g/"
+TREE_PATH = "save_cutree/"
 HOME_PATH = "/local-scratch/csv_oracle/"
 Q_PATH = "save_q/"
 RDEC = 1.1
+
 
 def read_actions(game_directory, game_dir):
   actions = sio.loadmat(game_directory + game_dir + "/action_{0}.mat".format(game_dir))
@@ -60,7 +61,7 @@ class CUTreeAgent:
     self.valiter = 1
     self.problem = problem
   
-  def update(self, currentObs, nextObs, action, qValue, value_iter=0, check_fringe=0,
+  def update(self, currentObs, nextObs, reward, action, qValue, value_iter=0, check_fringe=0,
              home_identifier=None, beginflag=False):
     """
     update the tree
@@ -73,12 +74,12 @@ class CUTreeAgent:
     :return:
     """
     t = self.utree.getTime()  # return the length of history
-    i = C_UTree.Instance(t, currentObs, action, nextObs, None, home_identifier, qValue)
+    i = C_UTree.Instance(t, currentObs, action, nextObs, reward, home_identifier, qValue)
     
     self.utree.updateCurrentNode(i, beginflag)
     
-    # if value_iter:
-    #   self.utree.sweepLeaves()  # value iteration is performed here
+    if value_iter:
+      self.utree.sweepLeaves()  # value iteration is performed here
     
     if check_fringe:
       self.utree.testFringe()  # ks test is performed here
@@ -101,7 +102,7 @@ class CUTreeAgent:
     t = self.utree.getTime()
     i = C_UTree.Instance(t, currentObs, action, currentObs, None, None, None)
     return self.utree.getInstanceFigure(i)
-    
+  
   def executePolicy(self, epsilon=1e-1):
     return None
     # """
@@ -136,7 +137,6 @@ class CUTreeAgent:
     # checkpoint = 26
     if checkpoint > 0:
       self.utree.fromcsvFile(TREE_PATH + "Game_File_" + str(checkpoint) + ".csv")
-      return
     
     for game_dir in game_dir_all:
       
@@ -150,12 +150,12 @@ class CUTreeAgent:
       event_number = len(game)
       initialAction = (int)(game[0][1][1] == 1)
       actionlist = np.stack((initialAction, initialAction, initialAction, initialAction))
-      beginflag = False
+      beginflag = True
       count += 1
       
       # if count < 30:
       #   continue
-        
+      
       for index in range(0, event_number):
         # action = self.problem.actions[
         # unicodedata.normalize('NFKD', actions[index]).encode('ascii', 'ignore').strip()]
@@ -171,6 +171,7 @@ class CUTreeAgent:
         states = game_info[0]
         action = actionlist[0]
         qValue = game_info[2]
+        reward = game_info[3]
         if (isinstance(qValue, list)):
           qValue = max(qValue)
         currentObs = np.insert(np.reshape(states, 14400), 14400, actionlist[1:])
@@ -187,20 +188,16 @@ class CUTreeAgent:
           
           # This should only apply once to ensure no duplicate instances
           if count <= checkpoint:
-            self.update(currentObs, nextObs, action, qValue, beginflag=beginflag)
-          elif index % self.cff == 0:  # check fringe, check fringe after cff iterations
-            self.update(currentObs, nextObs, action, qValue, value_iter=1, check_fringe=1, beginflag=beginflag)
+            self.update(currentObs, nextObs, reward, action, qValue, beginflag=beginflag)
+          elif index % self.cff == 199:  # check fringe, check fringe after cff iterations
+            self.update(currentObs, nextObs, reward, action, qValue, value_iter=1, check_fringe=1, beginflag=beginflag)
           else:
-            self.update(currentObs, nextObs, action, qValue, beginflag=beginflag)
+            self.update(currentObs, nextObs, reward, action, qValue, beginflag=beginflag)
           
-          # reset begin flag
-          # if action == 5:
-          #   beginflag = True
-          # else:
-          #   beginflag = False
+          beginflag = False
         
         else:
-          if count > 0 and random.randint(0, 100) % 50 == 0: # and actionlist[3] == 1:
+          if count > 0 and random.randint(0, 100) % 50 == 0:  # and actionlist[3] == 1:
             # q_tree = self.getQ(currentObs, action)
             # Qlist.append([q_tree, qValue])
             # inscount += 1
@@ -247,17 +244,17 @@ class CUTreeAgent:
             exit(0)
           else:
             continue
-
+      
       self.utree.significanceLevel /= RDEC
       
       if self.problem.isEpisodic:
-        if checkpoint < count:
-          # return
+        if checkpoint <= count:
+          return
           self.utree.print_tree()
           # pickle.dump(self.utree, open(TREE_PATH + "Game_File_" + str(count) + '.p', 'wb'))
           # exit(0)
           self.utree.tocsvFile(TREE_PATH + "Game_File_" + str(count) + ".csv")
-          exit(0)
+          # exit(0)
           # self.utree.tocsvFile(HOME_PATH + "Game_File_" + str(count) + ".csv")
         # print out tree info
         print("Game File " + str(count))

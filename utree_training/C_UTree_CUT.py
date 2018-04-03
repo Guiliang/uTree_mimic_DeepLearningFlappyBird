@@ -21,8 +21,8 @@ HIGH_COLOR = 220
 
 
 class CUTree:
-  def __init__(self, gamma, n_actions, dim_sizes, dim_names, max_hist, max_back_depth=1, minSplitInstances=10,
-               significance_level=0.01, is_episodic=0):
+  def __init__(self, gamma, n_actions, dim_sizes, dim_names, max_hist, max_back_depth=1, minSplitInstances=20,
+               significance_level=0.999, is_episodic=0):
     
     self.node_id_count = 0
     self.root = UNode(self.genId(), NodeLeaf, None, n_actions, 1)
@@ -62,84 +62,25 @@ class CUTree:
   #   return bestInst.action
   
   def getBestAction(self, currentObs):
-    maxCorr = 10000000
-    maxInst = None
-    flag = False
-    t = self.getTime()
-    # action 0
-    i = Instance(t, currentObs, 0, currentObs, None, None, None)
-    self.insertInstance(i)
-    next_state_0 = self.getInstanceLeaf(i)
-    for inst in next_state_0.instances:
-      sub = abs(currentObs - inst.currentObs) / 255
-      diff = np.sum(sub[:14400])
-      if maxCorr > diff:
-        maxCorr = diff
-        maxInst = inst
-    # check bird place
-    if maxInst is not None:
-      d = np.asarray(
-        [(currentObs[i] if maxInst.currentObs[i] == currentObs[i] else currentObs[i] + 100) for i in range(3600)])
-      check_d = np.reshape(d, (45, 80))
-      for i in range(45):
-        if check_d[i][54] == 0 and check_d[i][64] == 0 and check_d[i][59] == 100:
-          if i + 3 >= 45 or i - 8 <= 0:
-            break
-          elif check_d[i + 1][54] == 0 and check_d[i + 1][64] == 0 and check_d[i + 1][59] == 100 \
-              and check_d[i + 2][54] == 0 and check_d[i + 2][64] == 0 and check_d[i + 2][59] == 100 \
-              and check_d[i + 3][59] != 255 and check_d[i - 1][59] != 255:
-            maxCorr += 1000
-            break
-    self.popInstance()
-    # action 1
-    i = Instance(t, currentObs, 1, currentObs, None, None, None)
-    self.insertInstance(i)
-    next_state_1 = self.getInstanceLeaf(i)
-    for inst in next_state_1.instances:
-      sub = abs(currentObs - inst.currentObs) / 255
-      diff = np.sum(sub[:14400]) + np.sum(sub[14400:]) * 255000
-      if maxCorr > diff:
-        d = np.asarray(
-          [(currentObs[i] if inst.currentObs[i] == currentObs[i] else currentObs[i] + 100) for i in range(3600)])
-        check_d = np.reshape(d, (45, 80))
-        check_col = sum([(True if check_d[i][48] == 0 else False) for i in range(45)])
-        check_col_now = sum([(True if check_d[i][58] == 0 else False) for i in range(45)])
-        if check_col < 15:
-          diff += 1000
-        if check_col < 9:
-          diff += 1000
-        for i in range(45):
-          if check_d[i][54] == 0 and check_d[i][64] == 0 and check_d[i][59] == 355:
-            if i + 10 >= 45 or i == 0:
-              break
-            elif check_d[i+1][54] == 0 and check_d[i+1][64] == 0 and check_d[i+1][59] == 355 \
-                and check_d[i+2][54] == 0 and check_d[i+2][64] == 0 and check_d[i+2][59] == 355 \
-                and check_d[i+4][54] != 255 and check_d[i+3][52] != 255 and check_d[i+3][52] != 355:
-              # flag = True
-              diff += 1000
-              break
-          if check_d[i][54] == 100 and check_d[i][64] == 100 and check_d[i][59] == 255:
-            if i + 3 >= 45 or i == 0:
-              break
-            elif check_d[i+1][54] == 100 and check_d[i+1][64] == 100 and check_d[i+1][59] == 255 \
-                and check_d[i+2][54] == 100 and check_d[i+2][64] == 100 and check_d[i+2][59] == 255:
-                # and check_d[i+3][59] != 255 and check_d[i-1][59] != 255:
-              # flag = True
-              diff += 1000
-              break
-        # if not flag and maxCorr < 1000:
-        if maxCorr > diff:
-          maxCorr = diff
-          flag = True
-          # self.popInstance()
-          # return [0, 1]
-        # else:
-          # flag = False
-    self.popInstance()
-    if maxCorr >= 1300:
-      return [1, 0]
+    if random.randint(0, 100) % 5 ==0:
+      # seed = random.randint(0, 100) % 2
+      # if seed:
+      #   return [0, 1]
+      # else:
+        return [1, 0]
     else:
-      if flag:
+      t = self.getTime()
+      # action 0
+      i = Instance(t, currentObs, 0, currentObs, None, None, None)
+      self.insertInstance(i)
+      next_state_0 = self.getInstanceLeaf(i)
+      self.popInstance()
+      # action 1
+      i = Instance(t, currentObs, 1, currentObs, None, None, None)
+      self.insertInstance(i)
+      next_state_1 = self.getInstanceLeaf(i)
+      self.popInstance()
+      if next_state_1.utility(HOME) >= next_state_0.utility(HOME):
         return [0, 1]
       else:
         return [1, 0]
@@ -221,14 +162,14 @@ class CUTree:
           node.distinction = Distinction(dimension=int(record[1]),
                                          back_idx=0,
                                          dimension_name=self.dim_names[int(record[1])]
-                                         if int(record[1])>-1 else 'actions',
+                                         if int(record[1]) > -1 else 'actions',
                                          iscontinuous=True if record[2] else False,
                                          continuous_divide_value=float(record[2]) if record[
                                            2] else None)  # default back_idx is 0
         else:
           node = UNode(int(record[0]), NodeLeaf, self.nodes[int(record[3])] if record[3] else None,
                        self.n_actions, self.nodes[int(record[3])].depth + 1 if record[3] else 1)
-          node.qValues = float(record[4])
+          node.qValues = np.array(list(map(float, record[4][1:-1].split())))
           # node.qValues_home = float(record[4])
           # node.qValues_away = float(record[5])
         if node.parent:
@@ -303,16 +244,24 @@ class CUTree:
     :param instance: instance to add
     :return:
     """
-    # old_state = self.getLeaf(previous=1)  # get the leaf
-    # if old_state == self.term:  # if leaf is the dummy terminal node
-    #     return
+    old_state = self.getLeaf(previous=1)  # get the leaf
+    if old_state == self.term:  # if leaf is the dummy terminal node
+      return
     self.insertInstance(instance)  # add the new instance to U-Tree history
     new_state = self.getLeaf()  # get the leaf of next state
     new_state.addInstance(instance, self.max_hist)  # add the instance to leaf node
-    if not beginflag:  # last instance is not goal and not the beginning of the game
-      new_state.updateModel(None, None, None, None, instance.qValue)
-    # if instance.nextObs[0] == -1:  # this instance lead to goal
-    #   new_state.updateModel(None, None, None, None, instance.qValue)
+    if old_state != self.start:  # last instance is not goal
+      old_state.updateModel(new_state=new_state.idx,
+                            action=self.history[-2].action,
+                            reward=self.history[-2].reward)  # update state by adding action reward, adding action count and recording transition states
+    if instance.nextObs[0] == -1:  # this instance lead to goal
+      new_state.updateModel(new_state=self.start.idx,
+                            action=instance.action,
+                            reward=instance.reward)
+    elif instance.nextObs[0] == 0:
+      new_state.updateModel(new_state=self.term.idx,
+                            action=instance.action,
+                            reward=instance.reward)
   
   def sweepLeaves(self):
     '''
@@ -331,32 +280,17 @@ class CUTree:
     """
     if node.nodeType == NodeLeaf:
       # home team
-      for action, reward in enumerate(node.rewards_home):
-        c = float(node.count_home[action])  # action count
+      for action, reward in enumerate(node.rewards):
+        c = float(node.count[action])  # action count
         if c == 0:
           continue
         exp = 0
-        for node_to, t_h in node.transitions_home_home[action].items():
-          t_a = node.transitions_home_away[action][node_to]
+        for node_to, t in node.transitions[action].items():
           if reward[node_to] > 0:
             exp += reward[node_to] / c
           if node.idx != node_to:
-            exp += gamma * (self.nodes[node_to].utility(True) * t_h + self.nodes[node_to].utility(False) * t_a) / c
-        node.qValues_home[action] = exp
-      
-      # away team
-      for action, reward in enumerate(node.rewards_away):
-        c = float(node.count_away[action])  # action count
-        if c == 0:
-          continue
-        exp = 0
-        for node_to, t_h in node.transitions_away_home[action].items():
-          t_a = node.transitions_away_away[action][node_to]
-          if reward[node_to] > 0:
-            exp += reward[node_to] / c
-          if node.idx != node_to:
-            exp += gamma * (self.nodes[node_to].utility(True) * t_h + self.nodes[node_to].utility(False) * t_a) / c
-        node.qValues_away[action] = exp
+            exp += gamma * (self.nodes[node_to].utility(True) * t) / c
+        node.qValues[action] = exp
     
     # # assert is just for debugging, replace all assert to comment
     # assert node.nodeType == NodeSplit
@@ -435,20 +369,14 @@ class CUTree:
     :param node:
     :return:
     """
-    # assert node.nodeType == NodeLeaf
-    node.count = 0  # re-initialize count
-    # node.transitions = {}  # re-initialize transition
-    
+    node.rewards = [{} for i in range(self.n_actions)]
+    node.count = np.zeros(self.n_actions)  # re-initialize count
+    node.transitions = [{} for i in range(self.n_actions)]  # re-initialize transition
+
     for inst in node.instances:
-      # leaf_to = self.getInstanceLeaf(inst, previous=1)  # get the to node
-      # # update the node, add action reward, action count and transition states
-      # if leaf_to != self.term:
-      #   node.updateModel(leaf_to.idx, inst.action, inst.home_identifier,
-      #                    self.history[inst.timestep + 1].home_identifier, inst.qValue)
-      # else:
-      #   node.updateModel(leaf_to.idx, inst.action, inst.home_identifier,
-      #                    inst.home_identifier, inst.qValue)
-      node.updateModel(None, None, None, None, inst.qValue)
+      leaf_to = self.getInstanceLeaf(inst, previous=1)  # get the to node
+      # update the node, add action reward, action count and transition states
+      node.updateModel(leaf_to.idx, inst.action, inst.reward)
   
   def getLeaf(self, previous=0):
     '''
@@ -574,8 +502,8 @@ class CUTree:
     
     node.instances = []
     # update Q-values for children
-    # for n in node.children:
-    #   self.sweepRecursive(n, self.gamma)
+    for n in node.children:
+      self.sweepRecursive(n, self.gamma)
   
   def splitToFringe(self, node, distinction):
     """
@@ -671,7 +599,7 @@ class CUTree:
     if len(node.instances) < self.minSplitInstances:
       return None
     cds = self.getCandidateDistinctions(node)  # Get all the candidate distinctions
-    return self.ksTestonQ(node, cds)
+    return self.ksTest(node, cds)
   
   def mseTest(self, node, cds):
     """
@@ -742,8 +670,7 @@ class CUTree:
     :param cds: a list of candidate distinction to choose
     :return: the best distinction or None is not found
     """
-    root_utils = [self.getEFDRs(node, index) for index in
-                  [HOME, AWAY]]  # Get all expected future discounted returns for all instances in a node
+    root_utils = self.getEFDRs(node, HOME) # Get all expected future discounted returns for all instances in a node
     # get the best distinction
     dist_min = self.significanceLevel
     cd_min = None
@@ -752,30 +679,21 @@ class CUTree:
       self.splitToFringe(node, cd)  # split to fringe node with split candidate
       # record
       stop = 0
-      child_utils_home = []
-      child_utils_away = []
-      child_utils = [child_utils_home, child_utils_away]
+      child_utils = []
       for c in node.children:
         if len(c.instances) < self.minSplitInstances and cd.dimension != ActionDimension:
           stop = 1
           break
         # Get all expected future discounted returns for all instances in a children
-        child_utils_home.append(self.getEFDRs(c, HOME))
-        child_utils_away.append(self.getEFDRs(c, AWAY))
+        child_utils.append(self.getEFDRs(c, HOME))
       self.unsplit(node)  # delete split fringe node
       # if not enough instance in a node, stop split
       if stop == 1:
         continue
       
       # Computes the Kolmogorov-Smirnov statistic between parent EFDR and child EFDR
-      for i, cu in enumerate(child_utils[HOME]):
-        k, p = ks_2samp(root_utils[HOME], cu)
-        if p < dist_min:  # significance_level=0.00005, if p below it, this distinction is significant
-          dist_min = p
-          cd_min = cd
-          print("KS passed, p={}, d={}, back={}".format(p, cd.dimension, cd.back_idx))
-      for i, cu in enumerate(child_utils[AWAY]):
-        k, p = ks_2samp(root_utils[AWAY], cu)
+      for i, cu in enumerate(child_utils):
+        k, p = ks_2samp(root_utils, cu)
         if p < dist_min:  # significance_level=0.00005, if p below it, this distinction is significant
           dist_min = p
           cd_min = cd
@@ -796,7 +714,7 @@ class CUTree:
     for i, inst in enumerate(node.instances):
       next_state = self.getInstanceLeaf(inst, previous=1)  # Get leaf that inst records a transition from
       # split home and away
-      efdrs[i] = inst.reward if index == HOME else -inst.reward
+      efdrs[i] = inst.reward
       if node.parent and next_state != node.parent and next_state != self.term:
         next_state_util = next_state.utility(index == HOME)  # maximum Q value
         efdrs[i] += self.gamma * next_state_util  # r + gamma * maxQ
@@ -840,7 +758,7 @@ class CUTree:
     diff_significanceLevel = self.significanceLevel
     if diff_significanceLevel < 0.0001:
       diff_significanceLevel = 0.0001
-    print("Sig:"+str(diff_significanceLevel))
+    print("Sig:" + str(diff_significanceLevel))
     root_utils = self.getQs(node)
     variance = np.var(root_utils)
     # root_utils_home, root_utils_away = self.getQs(node)
@@ -979,11 +897,12 @@ class UNode:
     self.children = []
     
     # reward in instances maybe negative, but reward in node must be positive
-    self.count = 0
-    self.transitions = {}  # T(s, a, s')
+    self.rewards = [{} for i in range(n_actions)]  # r_home(s, a, s')
+    self.count = np.zeros(n_actions)
+    self.transitions = [{} for i in range(n_actions)]
     # self.qValues_home = 0
     # self.qValues_away = 0
-    self.qValues = 0
+    self.qValues = np.zeros(n_actions)
     
     self.distinction = None
     self.instances = []
@@ -997,7 +916,7 @@ class UNode:
     :param: index: if index is HOME, return Q_home, else return Q_away
     :return: maximum Q value
     """
-    return self.qValues
+    return max(self.qValues)
     # return self.qValues_home if home_identifier else self.qValues_away
   
   def addInstance(self, instance, max_hist):
@@ -1015,7 +934,7 @@ class UNode:
     if len(self.instances) > max_hist:
       self.instances = self.instances[1:]
   
-  def updateModel(self, new_state, action, home_identifier, next_home_identifier, qValue):
+  def updateModel(self, new_state, action, reward):
     """
     1. add action reward
     2. add action count
@@ -1030,8 +949,13 @@ class UNode:
     #                     / (self.count + 1)
     # self.qValues_away = (self.count * self.qValues_away + qValue[1]) \
     #                     / (self.count + 1)
-    self.qValues = (self.count * self.qValues + qValue) / (self.count + 1)
-    self.count += 1
+    self.count[action] += 1  # summation of the number of actions
+    if new_state not in self.transitions[action]:
+      self.transitions[action][new_state] = 1  # record transition
+      self.rewards[action][new_state] = reward
+    else:
+      self.transitions[action][new_state] += 1
+      self.rewards[action][new_state] += reward
     
     # if new_state not in self.transitions:
     #   self.transitions[new_state] = 1
@@ -1086,6 +1010,7 @@ class Instance:
   def __init__(self, timestep, currentObs, action, nextObs, reward, home_identifier, qValue):
     self.timestep = int(timestep)
     self.action = action
+    self.reward = reward
     self.nextObs = nextObs  # record the state data
     self.currentObs = currentObs  # record the state data
     # self.reward = reward  # reserve for getEFDR only
