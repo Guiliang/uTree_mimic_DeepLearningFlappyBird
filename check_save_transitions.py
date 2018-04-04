@@ -24,10 +24,11 @@ for i in range(4):
   observation.append(np.reshape(temp[i * 3600:(i + 1) * 3600], (45, 80)))
 
 # print(observation[0])
-first_image_plot = np.zeros((80, 80))
+first_image_plot = np.zeros((81, 81))
 for k in range(4):
-  first_image = np.flip(observation[k], axis=1)
-  first_image_plot[:][10:55] += first_image
+  first_image = np.zeros((81, 45))
+  first_image[:80] = np.transpose(np.flip(observation[k], axis=1))
+  first_image_plot[:][10:55] += np.transpose(first_image)
   # x = []
   # y = []
   # for i in range(80):
@@ -40,23 +41,21 @@ for k in range(4):
   #       x.append(j)
   #       y.append(i)
   #       first_image_plot[i][j] = PIXEL_COLOR
-# pure = np.linspace(-1, 1, 100)
-# noise = np.random.normal(0, 1, pure.shape)
-# print (noise)
 for i in range(50, 75):
   for j in range(80):
     if random.randint(0, 1000) % 100 == 0:
       first_image_plot[i][j] += random.random() / 100
-# for i in range(80):
-#   for j in range(80):
-#     first_image_plot[i][j] *= 200
+for i in range(80):
+  for j in range(80):
+    first_image_plot[i][j] *= 2.5
 sns.set(font_scale=2)
-fig = sns.heatmap(first_image_plot, vmin = 0, vmax = 0.05, center = 0, cmap='Blues')
-# fig.xaxis([0, 81, 20])
-major_ticks = np.arange(0, 81, 20)
-print(major_ticks)
-fig.set_xticks(major_ticks)
-fig.set_yticks(major_ticks)
+fig = sns.heatmap(first_image_plot, xticklabels=20, yticklabels=20,
+                  vmin = 0, vmax = 0.05, cmap='Blues')
+# fig.axis([0, 81, 81, 0])
+# major_ticks = np.arange(0, 81, 20)
+# print(major_ticks)
+# fig.set_xticks(major_ticks)
+# fig.set_yticks(major_ticks)
 # mpl_fig = plt.figure()
 # ax = mpl_fig.add_subplot(111)
 # x=[0, 1, 2, 3, 4, 5, 6, 7, 8]
